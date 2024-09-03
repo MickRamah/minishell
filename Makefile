@@ -6,7 +6,7 @@
 #    By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 16:34:14 by zramahaz          #+#    #+#              #
-#    Updated: 2024/08/30 16:50:09 by zramahaz         ###   ########.fr        #
+#    Updated: 2024/09/03 15:35:29 by zramahaz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -lreadline #-Wall -Wextra -Werror
 
 SRC_DIR = src/
 
