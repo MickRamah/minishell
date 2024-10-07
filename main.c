@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:01:28 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/21 16:52:23 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/09/28 15:39:31 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,14 @@ int parseline(t_data *data, char *line)
         printf("malloc ERROR\n");
         exit (0);
     }
-    printf("line = |%s|\n", line);
-//     if (!replace_dollar(&line, data) || !create_list_token(&data->token, line))
-//     {
-//         free(line);
-//         printf("malloc ERROR\n");
-//         exit (1);
-//     }
+    if (!create_list_token(&data->token, line))
+    {
+        free(line);
+        printf("malloc ERROR\n");
+        exit (0);
+    }
+    // printf("line = |%s|\n", line);
     free(line);
-//     print_token(data->token);
     return (1);
 }
 
@@ -100,6 +99,8 @@ int main(int argc, char **argv, char **env)
             free(line);
             continue ;
         }
+        print_token(data.token);
+        free_token(&data.token);
     }
     free_env(&data.env);
     return (0);

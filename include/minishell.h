@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:00:16 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/21 16:48:54 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/09/28 17:11:22 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,10 @@ int	free_list(t_list_env **list);
 // ft_free.c
 void    free_env(t_list_env **env);
 
+
+t_token *ft_last_list_token(t_token *list);
+t_list_env *ft_last_list_env(t_list_env *list);
+int is_special(char *command);
+void    add_special(t_token **begin, char **command);
 
 #endif

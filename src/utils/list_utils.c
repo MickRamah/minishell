@@ -6,15 +6,25 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:54:27 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/21 14:20:28 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/09/28 15:21:00 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-t_list_env *ft_last_list(t_list_env *list)
+t_list_env *ft_last_list_env(t_list_env *list)
 {
     t_list_env  *last;
+
+    last = list;
+    while (last->next)
+        last = last->next;
+    return (last);
+}
+
+t_token *ft_last_list_token(t_token *list)
+{
+    t_token  *last;
 
     last = list;
     while (last->next)
@@ -39,7 +49,7 @@ void    append(t_list_env **list, char *line)
     }
     else
     {
-        last = ft_last_list(*list);
+        last = ft_last_list_env(*list);
         last->next = new;
         new->prev = last;
     }
