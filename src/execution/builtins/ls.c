@@ -1,19 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ls.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
+/*   By: herakoto <herakoto@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/30 16:47:16 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/26 16:43:57 by herakoto         ###   ########.fr       */
+/*   Created: 2024/10/08 17:54:32 by herakoto          #+#    #+#             */
+/*   Updated: 2024/10/08 17:58:53 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/minishell.h"
 
-int main(void)
-{
-    printf("Mety\n");
-    return (0);
-}
