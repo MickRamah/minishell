@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:02:56 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/10/07 08:03:16 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:11:47 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void    append_in_token(t_token **begin, char *line, int type)
     new->next = NULL;
     new->type = type;
     new->str = ft_strdup(line);
+    free(line);
     if (!new->str)
         exit (1);
     if (*begin == NULL)
@@ -76,7 +77,7 @@ void    change_str(char *command, char *tmp, int size)
 
 void len_cmd(char *command, int *quote, int *lenght)
 {
-    while (command[*lenght] && command[*lenght] != ' ')
+    while (command[*lenght] && command[*lenght] != ' ' && !is_special(command + (*lenght)))
     {
         if (command[*lenght] == '"')
         {

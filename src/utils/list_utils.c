@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:54:27 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/28 15:21:00 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/10/07 08:54:18 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ t_token *ft_last_list_token(t_token *list)
     t_token  *last;
 
     last = list;
+    if (last == NULL)
+        return (NULL);
     while (last->next)
         last = last->next;
     return (last);

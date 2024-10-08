@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:01:28 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/28 15:39:31 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/10/07 17:06:17 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int empty_line(char *line)
 
 int parseline(t_data *data, char *line)
 {
+    t_token *last;
+    
     if (!check_quote(data, line))
     {
         printf("quote is open\n");
@@ -73,8 +75,15 @@ int parseline(t_data *data, char *line)
         printf("malloc ERROR\n");
         exit (0);
     }
-    // printf("line = |%s|\n", line);
     free(line);
+    print_token(data->token);
+    last = ft_last_list_token(data->token);
+    if (last->type == PIPE)
+    {
+        write(2, "Error: Unclosed pipe\n", 21);
+		data->exit_code = 2;
+        return (0);
+    }
     return (1);
 }
 
@@ -92,14 +101,18 @@ int main(int argc, char **argv, char **env)
         if (line == NULL)
             return (1);
         if (empty_line(line))
-            continue ;
-        add_history(line);
-        if (!parseline(&data, line))
         {
             free(line);
             continue ;
         }
-        print_token(data.token);
+        add_history(line);
+        if (!parseline(&data, line))
+        {
+            free(line);
+            free_token(&data.token);
+            continue ;
+        }
+        free(line);
         free_token(&data.token);
     }
     free_env(&data.env);

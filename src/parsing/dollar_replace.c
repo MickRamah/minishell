@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:31:55 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/28 15:38:40 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:28:37 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int replace_dollar(char **line, t_data *data)
             i++;
         }
     }
-    free(*line);
+    // free(*line);
     *line = str;
     return (1);
 }
