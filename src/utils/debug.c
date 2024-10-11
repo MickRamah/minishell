@@ -6,37 +6,61 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:34:23 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/09/28 15:25:43 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:25:55 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void    print_env(t_list_env *env)
+void	print_env(t_list_env *env)
 {
-    t_list_env  *begin;
-    t_list_env  *last;
+	t_list_env	*begin;
+	t_list_env	*last;
 
-    begin = env;
-    last = ft_last_list_env(env);
-    while (begin)
-    {
-        printf("|%s|\n", begin->str);
-        begin = begin->next;
-    }
-    printf("\n");
+	begin = env;
+	last = ft_last_list_env(env);
+	while (begin)
+	{
+		printf("|%s|\n", begin->str);
+		begin = begin->next;
+	}
+	printf("\n");
 }
 
-void    print_token(t_token *env)
+void	print_token(t_token *env)
 {
-    t_token  *begin;
-    t_token  *last;
+	t_token		*begin;
+	t_token		*last;
 
-    begin = env;
-    while (begin)
-    {
-        printf("|%s| [%d]\n", begin->str, begin->type);
-        begin = begin->next;
-    }
-    printf("\n");
+	begin = env;
+	while (begin)
+	{
+		printf("|%s| [%d]\n", begin->str, begin->type);
+		begin = begin->next;
+	}
+	printf("\n");
+}
+
+void	print_cmd(t_cmd *cmd)
+{
+	int		i;
+	t_cmd	*last;
+	char	**arg;
+
+	last = cmd;
+	while (last)
+	{
+		i = 0;
+		arg = last->argv;
+		printf("cmd : [");
+		while (arg[i])
+		{
+			printf("%s", arg[i]);
+			if (arg[i + 1])
+				printf(", ");
+			i++;
+		}
+		printf("]\n");
+		last = last->next;
+	}
 }

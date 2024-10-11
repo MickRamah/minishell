@@ -6,7 +6,7 @@
 #    By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 16:34:14 by zramahaz          #+#    #+#              #
-#    Updated: 2024/09/21 16:46:20 by zramahaz         ###   ########.fr        #
+#    Updated: 2024/10/10 16:10:33 by zramahaz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -lreadline #-Wall -Wextra -Werror
+CFLAGS = -lreadline -g#-Wall -Wextra -Werror
 
 SRC_DIR = src/
 
@@ -22,9 +22,12 @@ PARS_DIR = src/parsing/
 
 UTLS_DIR = src/utils/
 
+EXEC_DIR = src/exec/
+
 SRCS = main.c $(PARS_DIR)quote.c $(PARS_DIR)create_token.c $(PARS_DIR)dollar_replace.c $(PARS_DIR)dollar_env.c \
 		$(UTLS_DIR)ms_utils.c $(UTLS_DIR)list_token.c $(UTLS_DIR)debug.c \
-		$(UTLS_DIR)list_utils.c $(UTLS_DIR)ft_free.c
+		$(UTLS_DIR)list_utils.c $(UTLS_DIR)ft_free.c $(PARS_DIR)create_cmd.c \
+		$(EXEC_DIR)exec.c
 
 OBJS = $(SRCS:.c=.o)
 
