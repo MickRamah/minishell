@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:35:46 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/10/11 15:58:02 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/10/14 10:28:13 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ void	add_to_cmd(t_cmd *new, t_token **begin)
 			i++;
 		}
 	}
+	new->argv[i] = NULL;
 }
 
 void	append_cmd(t_cmd **command, t_token **begin, int nb)
@@ -111,7 +112,9 @@ void	append_cmd(t_cmd **command, t_token **begin, int nb)
 		exit (1);
 	new->next = NULL;
 	new->argv = (char **)malloc(sizeof(char *) * (nb + 1));
-	new->argv[nb] = NULL;
+	new->infile = -2;
+	new->outfile = -2;
+	// new->argv[nb] = NULL;
 	if (!new->argv)
 		exit (1);
 	add_to_cmd(new, begin);

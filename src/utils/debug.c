@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:34:23 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/10/11 16:25:55 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/10/14 10:15:03 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	print_cmd(t_cmd *cmd)
 	{
 		i = 0;
 		arg = last->argv;
+		printf("infile-> %d, outfile-> %d, ", last->infile, last->outfile);
 		printf("cmd : [");
 		while (arg[i])
 		{
