@@ -27,7 +27,7 @@ EXEC_DIR = src/exec/
 SRCS = main.c $(PARS_DIR)quote.c $(PARS_DIR)create_token.c $(PARS_DIR)dollar_replace.c $(PARS_DIR)dollar_env.c \
 		$(UTLS_DIR)ms_utils.c $(UTLS_DIR)list_token.c $(UTLS_DIR)debug.c \
 		$(UTLS_DIR)list_utils.c $(UTLS_DIR)ft_free.c $(PARS_DIR)create_cmd.c \
-		$(EXEC_DIR)exec.c
+		$(EXEC_DIR)exec.c $(EXEC_DIR)exec2.c
 
 OBJS = $(SRCS:.c=.o)
 

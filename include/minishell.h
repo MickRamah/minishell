@@ -20,6 +20,9 @@
 # include "../libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <fcntl.h>
 
 # define INPUT		1	//"<"
 # define HEREDOC	2	//"<<"
@@ -65,6 +68,7 @@ typedef struct s_data
 int			check_quote(t_data *data, char *line);
 int			replace_dollar(char **line, t_data *data);
 int			create_list_token(t_token **begin, char *command);
+int			create_list_cmd(t_data *data);
 int			exist_in_env(char *line, t_list_env *env, int *index, char **str);
 int			len_var(char *line, char *str);
 bool		is_space(char c);
@@ -73,6 +77,7 @@ void		free_token(t_token **list);
 void		print_token(t_token *token);
 void		print_cmd(t_cmd *cmd);
 void		append(t_list_env **list, char *line);
+void		append_in_token(t_token **begin, char *line, int type);
 int			free_list(t_list_env **list);
 void		free_env(t_list_env **env);
 void		free_cmd(t_cmd **cmd);
@@ -81,6 +86,8 @@ t_token		*ft_last_list_token(t_token *list);
 t_list_env	*ft_last_list_env(t_list_env *list);
 int			is_special(char *command);
 void		add_special(t_token **begin, char **command);
-void		exec(t_data *data);
+int			exec(t_data *data, char **env);
+char	**ft_get_all_path(t_list_env *env);
+char	*get_filename(t_token *token);
 
 #endif

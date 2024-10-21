@@ -48,11 +48,19 @@ void	free_cmd(t_cmd **cmd)
 {
 	t_cmd	*tmp;
 	t_cmd	*current;
+	int		i;
 
 	current = *cmd;
+	i = 0;
 	while (current)
 	{
 		tmp = current->next;
+		while (current->argv[i])
+		{
+			free(current->argv[i]);
+			i++;
+		}
+		free(current->argv);
 		free(current);
 		current = tmp;
 	}

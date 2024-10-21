@@ -96,10 +96,12 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 	char	*line;
+	// int	i;
 
+	// i = 1;
 	init_data(&data);
 	create_env(&data, env);
-	while (1)
+	while (42/*&& i > 0*/)
 	{
 		line = readline("minishell> ");
 		if (line == NULL)
@@ -113,10 +115,15 @@ int	main(int argc, char **argv, char **env)
 			free_token(&data.token);
 			continue ;
 		}
+		exec(&data, env);
 		free(line);
 		free_token(&data.token);
 		free_cmd(&data.cmd);
+		// i--;
 	}
+	// i = 0;
+	// while (i++ < history_length)
+	// 	rl_clear_history();
 	free_env(&data.env);
 	return (0);
 }

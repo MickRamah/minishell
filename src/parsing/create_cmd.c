@@ -84,6 +84,10 @@ void	add_to_cmd(t_cmd *new, t_token **begin)
 		if ((*begin)->type == APPEND || (*begin)->type == HEREDOC || \
 			(*begin)->type == TRUNC || (*begin)->type == INPUT)
 		{
+			if ((*begin)->type == APPEND || (*begin)->type == TRUNC)
+				new->outfile = 1;
+			else if ((*begin)->type == INPUT || (*begin)->type == HEREDOC)
+				new->infile = 0;
 			if ((*begin)->next->next == NULL)
 				(*begin) = (*begin)->next->next;
 			else
