@@ -46,25 +46,24 @@ t_cmd	*ft_last_list_cmd(t_cmd *command)
 	return (last);
 }
 
-void	append(t_list_env **list, char *line)
+int	append_in_env(t_list_env **list, char *line)
 {
 	t_list_env	*new;
 	t_list_env	*last;
 
 	new = (t_list_env *)malloc(sizeof(t_list_env));
 	if (new == NULL)
-		exit(0);
+		return (0);
 	new->next = NULL;
+	new->prev = NULL;
 	new->str = line;
 	if (*list == NULL)
-	{
 		*list = new;
-		(*list)->prev = NULL;
-	}
 	else
 	{
 		last = ft_last_list_env(*list);
 		last->next = new;
 		new->prev = last;
 	}
+	return (1);
 }

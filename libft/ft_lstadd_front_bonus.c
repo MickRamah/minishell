@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get.c                                           :+:      :+:    :+:   */
+/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/17 10:46:03 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/10/17 10:47:39 by zramahaz         ###   ########.fr       */
+/*   Created: 2024/03/06 11:40:41 by zramahaz          #+#    #+#             */
+/*   Updated: 2024/03/07 10:49:02 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-char	**ft_get_all_path(t_list_env *env)
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-	char		*path;
-	char		**all_path;
-	t_list_env	*current;
-
-	path = NULL;
-	all_path = NULL;
-	current = env;
-	while (current)
-	{
-		if (ft_strncmp(current->str, "PATH", 4) == 0)
-		{
-			path = current->str + 5;
-			all_path = ft_split(path, ':');
-			return (all_path);
-		}
-		current = current->next;
-	}
-	return (NULL);
+	new->next = *lst;
+	*lst = new;
 }
+
+/*
+l'adresse de <new->next> va etre l'adresse du 1er element;
+et le 1er element va etre new car <*lst> = <new> ce qui veux 
+dire que l'adresse de <new> sera affecte a l'adresse de <lst>
+*/

@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:01:28 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/10/11 14:02:32 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/11/20 11:15:59 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,16 @@ void	create_env(t_data *data, char **env)
 	{
 		tmp = ft_strdup(env[i]);
 		if (tmp == NULL)
-			exit(0);
-		append(&list, tmp);
+		{
+			free_env(&list);
+			exit(1);
+		}
+		if (append_in_env(&list, tmp) == 0)
+		{
+			free_env(&list);
+			write(2, "malloc error\n", 13);
+			exit (1);
+		}
 		i++;
 	}
 	data->env = list;
@@ -34,6 +42,7 @@ void	create_env(t_data *data, char **env)
 void	init_data(t_data *data)
 {
 	data->sq = false;
+	data->dq = false;
 	data->cmd = NULL;
 	data->token = NULL;
 	data->env = NULL;
@@ -57,51 +66,42 @@ int	empty_line(char *line)
 
 int	parseline(t_data *data, char *line)
 {
-	t_token	*last;
-	int		i;
+	int	status;
 
 	if (!check_quote(data, line))
 	{
-		printf("quote is open\n");
+		free(line);
 		return (0);
 	}
-	if (!replace_dollar(&line, data))
+	if (!replace_dollar(&line, data) || !create_list_token(&data->token, line))
 	{
 		free(line);
 		printf("malloc ERROR\n");
-		exit (0);
-	}
-	if (!create_list_token(&data->token, line))
-	{
-		free(line);
-		printf("malloc ERROR\n");
-		exit (0);
+		free_data(data, 1);
 	}
 	free(line);
 	print_token(data->token);
-	last = ft_last_list_token(data->token);
-	if (last->type == PIPE)
+	if (!create_list_cmd(data))
 	{
-		write(2, "Error: Unclosed pipe\n", 21);
-		data->exit_code = 2;
+		free_token(&data->token);
+		free_cmd(&data->cmd);
 		return (0);
 	}
-	if (!create_list_cmd(data))
-		return (0);
 	print_cmd(data->cmd);
-	return (1);
+	status = check_pipe(data, data->token);
+	return (status);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 	char	*line;
-	// int	i;
 
-	// i = 1;
+	(void)argc;
+	(void)argv;
 	init_data(&data);
 	create_env(&data, env);
-	while (42/*&& i > 0*/)
+	while (1)
 	{
 		line = readline("minishell> ");
 		if (line == NULL)
@@ -110,20 +110,12 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		add_history(line);
 		if (!parseline(&data, line))
-		{
-			free(line);
-			free_token(&data.token);
 			continue ;
-		}
-		exec(&data, env);
-		free(line);
+		exec(&data);
 		free_token(&data.token);
 		free_cmd(&data.cmd);
-		// i--;
 	}
-	// i = 0;
-	// while (i++ < history_length)
-	// 	rl_clear_history();
-	free_env(&data.env);
+	rl_clear_history();
+	free_data(&data, -42);
 	return (0);
 }

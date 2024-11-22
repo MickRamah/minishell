@@ -6,48 +6,13 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:35:46 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/10/14 10:28:13 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/11/09 13:56:24 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ft_check_error(t_token *begin)
-{
-	while (begin)
-	{
-		if (begin->type == APPEND || begin->type == HEREDOC || \
-			begin->type == TRUNC || begin->type == INPUT)
-		{
-			if (begin->next == NULL)
-			{
-				printf("minishell: syntax error near unexpected token `newline'\n");
-				return (1);
-			}
-			else if (begin->next && (begin->next->type == APPEND || \
-				begin->next->type == HEREDOC || begin->next->type == TRUNC || \
-				begin->next->type == INPUT) || begin->next->type == PIPE)
-			{
-				printf("minishell: syntax error near unexpected token `...'\n");
-				return (1);
-			}
-			else
-				begin = begin->next;
-		}
-		else if (begin->type == CMD || begin->type == ARG || begin->type == PIPE)
-		{
-			if (begin->type == PIPE && begin->next && begin->next->type == PIPE)
-			{
-				printf("minishell: syntax error near unexpected token `|'\n");
-				return (1);
-			}
-			begin = begin->next;
-		}
-	}
-	return (0);
-}
-
-int	get_nbrs_cmd(t_token *begin)
+static int	get_nbrs_cmd(t_token *begin)
 {
 	int	count;
 
@@ -74,80 +39,78 @@ int	get_nbrs_cmd(t_token *begin)
 	return (count);
 }
 
-void	add_to_cmd(t_cmd *new, t_token **begin)
+static t_cmd	*create_and_init_cmd(int nb)
 {
-	int	i;
+	t_cmd	*new;
 
-	i = 0;
-	while (*begin && (*begin)->type != PIPE)
+	new = (t_cmd *)malloc(sizeof(t_cmd));
+	if (new == NULL)
+		return (NULL);
+	new->next = NULL;
+	new->prev = NULL;
+	new->infile = -2;
+	new->outfile = -2;
+	new->argv = (char **)malloc(sizeof(char *) * (nb + 1));
+	if (!new->argv)
 	{
-		if ((*begin)->type == APPEND || (*begin)->type == HEREDOC || \
-			(*begin)->type == TRUNC || (*begin)->type == INPUT)
-		{
-			if ((*begin)->type == APPEND || (*begin)->type == TRUNC)
-				new->outfile = 1;
-			else if ((*begin)->type == INPUT || (*begin)->type == HEREDOC)
-				new->infile = 0;
-			if ((*begin)->next->next == NULL)
-				(*begin) = (*begin)->next->next;
-			else
-			{
-				(*begin) = (*begin)->next->next;
-			}
-		}
-		else if ((*begin)->type == CMD || (*begin)->type == ARG)
-		{
-			new->argv[i] = ft_strdup((*begin)->str);
-			*begin = (*begin)->next;
-			i++;
-		}
+		free(new);
+		return (NULL);
 	}
-	new->argv[i] = NULL;
+	return (new);
 }
 
-void	append_cmd(t_cmd **command, t_token **begin, int nb)
+static int	append_cmd(t_cmd **command, t_token **begin, int nb, t_data *data)
 {
 	t_cmd	*new;
 	t_cmd	*last;
-	int		i;
+	int		status;
 
-	new = (t_cmd *)malloc(sizeof(t_cmd));
-	if (!new)
-		exit (1);
-	new->next = NULL;
-	new->argv = (char **)malloc(sizeof(char *) * (nb + 1));
-	new->infile = -2;
-	new->outfile = -2;
-	// new->argv[nb] = NULL;
-	if (!new->argv)
-		exit (1);
-	add_to_cmd(new, begin);
+	new = create_and_init_cmd(nb);
+	if (new == NULL)
+		return (0);
+	status = add_to_cmd(new, begin, data);
+	if (status == -1 || status == 0)
+	{
+		free_cmd(&new);
+		if (status == -1)
+			return (-1);
+		else
+			return (0);
+	}
 	if (*command == NULL)
 	{
 		*command = new;
-		new->prev = NULL;
-		return ;
+		return (1);
 	}
 	last = ft_last_list_cmd(*command);
 	last->next = new;
 	new->prev = last;
+	return (1);
 }
 
 int	create_list_cmd(t_data *data)
 {
 	t_token	*begin;
 	int		nb;
+	int		status;
 
 	nb = 0;
 	begin = data->token;
-	if (ft_check_error(begin))
-		return (1);
+	if (ft_check_error(begin, data))
+		return (0);
 	while (begin)
 	{
 		nb = get_nbrs_cmd(begin);
 		if (nb == -1)
 			return (0);
-		append_cmd(&data->cmd, &begin, nb);
+		status = append_cmd(&data->cmd, &begin, nb, data);
+		if (status == -1)
+		{
+			data->exit_code = 2;
+			return (0);
+		}
+		if (status == 0)
+			free_data(data, 1);
 		if (begin && begin->type == PIPE)
 			begin = begin->next;
 	}
