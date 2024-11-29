@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:01:28 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/20 11:15:59 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:38:21 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,13 @@ int	main(int argc, char **argv, char **env)
 	{
 		line = readline("minishell> ");
 		if (line == NULL)
-			return (1);
+			ft_end_of_file(&data);
 		if (empty_line(line))
 			continue ;
 		add_history(line);
 		if (!parseline(&data, line))
 			continue ;
 		exec(&data);
-		free_token(&data.token);
-		free_cmd(&data.cmd);
 	}
 	rl_clear_history();
 	free_data(&data, -42);
