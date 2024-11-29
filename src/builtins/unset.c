@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: herakoto <herakoto@student.42antananari    +#+  +:+       +#+        */
+/*   By: herakoto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 17:54:32 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/22 14:45:36 by herakoto         ###   ########.fr       */
+/*   Created: 2024/11/27 13:08:43 by herakoto          #+#    #+#             */
+/*   Updated: 2024/11/27 14:32:05 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int			ft_unset(char **arg, t_list_env **env)
 
 	i = 1;
 	var = NULL;
-	count = ft_count_arg(arg);
+	count = count_arg(arg);
     if (count < 2)
 		return (1);
 	while (i < count)

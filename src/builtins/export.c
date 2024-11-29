@@ -6,8 +6,7 @@
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 17:14:07 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/26 18:01:13 by herakoto         ###   ########.fr       */
-/*                                                                            */
+/*   Updated: 2024/11/27 14:13:15 by herakoto         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
@@ -75,9 +74,9 @@ static int	ft_exist(char *str, t_list_env *env)
 
 bool	export(char *str, t_list_env **env)
 {
-	int		pos;
-	int		i;
-	char	*value;
+	int			pos;
+	int			i;
+	char		*value;
 	t_list_env	*tmp;
 
 	pos = ft_exist(str, (*env));
@@ -88,17 +87,14 @@ bool	export(char *str, t_list_env **env)
 	{
 		tmp = *env;
 		i = 0;
-		while (i < pos)
-		{
+		while (i++ < pos)
 			tmp = tmp->next;
-			i++;
-		}
 		free(tmp->str);
 		tmp->str = value;
 	}
 	else if (pos == -1)
 	{
-		if (!append(env, value))
+		if (!append_in_env(env, value))
 			return (false);
 	}
 	return (true);
@@ -107,16 +103,24 @@ bool	export(char *str, t_list_env **env)
 int	ft_export(char **str, t_list_env **env)
 {
 	int	i;
+	int	exit_code;
 	int	count;
 
 	i = 1;
-	if (ft_count_arg(str) == 1)
+	count = count_arg(str);
+	if (count == 1)
 		return (ft_export_no_args(*env));
-	count = ft_count_arg(str);
+	count = count_arg(str);
 	while (i < count)
 	{
-		export(str[i], env);
+		if (!valid_identifier(str[i]))
+		{
+			write(2, "export: invalid identifier\n", 27);
+			exit_code = 1;
+		}
+		else if (!export(str[i], env))
+			return (write(2, "malloc error\n", 13));
 		i++;
 	}
-	return (1);
+	return (exit_code);
 }

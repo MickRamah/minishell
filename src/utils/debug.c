@@ -30,7 +30,6 @@ void	print_env(t_list_env *env)
 void	print_token(t_token *env)
 {
 	t_token		*begin;
-	t_token		*last;
 
 	begin = env;
 	while (begin)

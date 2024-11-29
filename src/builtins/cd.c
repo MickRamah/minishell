@@ -6,7 +6,7 @@
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 15:37:12 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/26 14:53:18 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:30:08 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_cd(t_data *data, char **arg)
 {
 	int	fd;
 
-	if (ft_count_arg(arg) == 2)
+	if (count_arg(arg) == 2)
 	{
 		fd = chdir(arg[1]);
 		if (fd == 0)

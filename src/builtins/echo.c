@@ -6,7 +6,7 @@
 /*   By: herakoto <herakoto@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 15:17:29 by herakoto          #+#    #+#             */
-/*   Updated: 2024/10/21 08:27:41 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/11/29 09:45:26 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	check_new_line(char *str)
 	i = 0;
 	if (str[i] && str[i] == '-')
 	{
-		++i;
+		i++;
 		while (str[i] && str[i] == 'n')
 			i++;
 		if (i == (int)ft_strlen(str))
@@ -28,11 +28,18 @@ static int	check_new_line(char *str)
 	return (0);
 }
 
-static void	write_echo(int count, int i, bool new_line, char **args)
+int	ft_echo(char **args)
 {
+	int		count;
+	int		i;
+	bool	new_line;
+
+	count = count_arg(args);
+	i = 1;
+	new_line = true;
 	while (args[i] && check_new_line(args[i]))
 	{
-		++i;
+		i++;
 		new_line = false;
 	}
 	while (i < count)
@@ -44,20 +51,6 @@ static void	write_echo(int count, int i, bool new_line, char **args)
 	}
 	if (new_line)
 		write(1, "\n", 1);
-}
-
-int	ft_echo(char **args)
-{
-	int		count;
-	int		i;
-	bool	new_line;
-
-	count = 0;
-	while (args[count])
-		++count;
-	i = 1;
-	new_line = true;
-	write_echo(count, i, new_line, args);
 	return (0);
 }
 

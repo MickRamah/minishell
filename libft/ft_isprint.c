@@ -1,27 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
+/*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 17:07:16 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 14:31:34 by herakoto         ###   ########.fr       */
+/*   Created: 2024/02/19 13:16:13 by zramahaz          #+#    #+#             */
+/*   Updated: 2024/02/19 13:19:52 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <limits.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+int	ft_isprint(int c)
 {
-	char	current_directory[PATH_MAX];
-	if (getcwd(current_directory, sizeof(current_directory)) != NULL)
-		printf("%s\n", current_directory);
-	else
-	{
-		perror("pwd: ");
+	if ((c >= 32) && (c <= 126))
 		return (1);
-	}
-	return (0);
+	else
+		return (0);
 }

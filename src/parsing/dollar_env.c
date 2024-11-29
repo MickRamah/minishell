@@ -6,13 +6,13 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:05:00 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/10/11 16:10:25 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/11/09 13:49:32 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	append_in_str(char **str, char *str_env)
+static int	append_in_str(char **str, char *str_env)
 {
 	int		i;
 	char	*tmp;
@@ -24,8 +24,9 @@ void	append_in_str(char **str, char *str_env)
 	tmp = ft_strjoin(*str, &str_env[i]);
 	free(*str);
 	if (tmp == NULL)
-		exit (1);
+		return (0);
 	*str = tmp;
+	return (1);
 }
 
 int	len_var(char *line, char *str)
@@ -35,7 +36,8 @@ int	len_var(char *line, char *str)
 
 	len_line = 0;
 	len_str = 0;
-	while (line[len_line] && line[len_line] != ' ' && ft_isalnum(line[len_line]))
+	while (line[len_line] && line[len_line] != ' ' \
+		&& ft_isalnum(line[len_line]))
 		len_line++;
 	while (str[len_str] && str[len_str] != '=')
 		len_str++;
@@ -49,12 +51,17 @@ int	exist_in_env(char *line, t_list_env *env, int *index, char **str)
 	int	i;
 
 	i = 0;
+	if (line[*index + 1] == '?')
+		return (2);
 	while (env)
 	{
-		if (strncmp(&line[*index + 1], env->str, len_var(&line[*index + 1], env->str)) == 0)
+		if (strncmp(&line[*index + 1], env->str, len_var(&line[*index + 1] \
+			, env->str)) == 0)
 		{
-			append_in_str(str, env->str);
-			*index += ft_strlen(env->str) - ft_strlen(ft_strchr(env->str, '=')) + 1;
+			if (append_in_str(str, env->str) == 0)
+				return (-1);
+			*index += ft_strlen(env->str) \
+				- ft_strlen(ft_strchr(env->str, '=')) + 1;
 			return (1);
 		}
 		env = env->next;

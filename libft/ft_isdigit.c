@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
+/*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 17:07:16 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 14:31:34 by herakoto         ###   ########.fr       */
+/*   Created: 2024/02/19 10:55:43 by zramahaz          #+#    #+#             */
+/*   Updated: 2024/02/25 09:03:12 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <limits.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+int	ft_isdigit(int c)
 {
-	char	current_directory[PATH_MAX];
-	if (getcwd(current_directory, sizeof(current_directory)) != NULL)
-		printf("%s\n", current_directory);
-	else
-	{
-		perror("pwd: ");
+	if (c >= 48 && c <= 57)
 		return (1);
-	}
 	return (0);
 }

@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
+/*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 17:07:16 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 14:31:34 by herakoto         ###   ########.fr       */
+/*   Created: 2024/02/23 08:43:32 by zramahaz          #+#    #+#             */
+/*   Updated: 2024/02/28 16:56:33 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <limits.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	char	current_directory[PATH_MAX];
-	if (getcwd(current_directory, sizeof(current_directory)) != NULL)
-		printf("%s\n", current_directory);
-	else
+	unsigned char	*d1;
+	unsigned char	*d2;
+	size_t			i;
+
+	d1 = (unsigned char *)s1;
+	d2 = (unsigned char *)s2;
+	i = 0;
+	while (n--)
 	{
-		perror("pwd: ");
-		return (1);
+		if (d1[i] != d2[i])
+			return (d1[i] - d2[i]);
+		i++;
 	}
 	return (0);
 }

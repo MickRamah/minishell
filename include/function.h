@@ -1,27 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   function.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 17:07:16 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 14:31:34 by herakoto         ###   ########.fr       */
+/*   Created: 2024/11/27 13:51:43 by herakoto          #+#    #+#             */
+/*   Updated: 2024/11/27 13:53:28 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <limits.h>
+#ifndef FUNCTION_H
+# define FUNCTION_H
 
-int	ft_pwd(void)
-{
-	char	current_directory[PATH_MAX];
-	if (getcwd(current_directory, sizeof(current_directory)) != NULL)
-		printf("%s\n", current_directory);
-	else
-	{
-		perror("pwd: ");
-		return (1);
-	}
-	return (0);
-}
+int	count_arg(char **arg);
+
+#endif
+
