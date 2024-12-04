@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 10:46:03 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/20 16:23:08 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:54:31 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void	ft_for_child(t_data *data, t_cmd *command, int *pipe_fd)
 	int		i;
 	int		lenght_list;
 
+	signal(SIGINT, SIG_DFL);
 	path = NULL;
 	current_env = NULL;
 	i = 0;

@@ -6,7 +6,7 @@
 #    By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 16:34:14 by zramahaz          #+#    #+#              #
-#    Updated: 2024/12/04 17:15:30 by herakoto         ###   ########.fr        #
+#    Updated: 2024/12/04 17:52:43 by herakoto         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ SRCS = main.c $(PARS_DIR)quote.c $(PARS_DIR)create_token.c $(PARS_DIR)dollar_rep
 		$(BUILTINS_DIR)pwd.c $(BUILTINS_DIR)export.c $(BUILTINS_DIR)cd.c \
 		$(BUILTINS_DIR)ft_exit.c $(BUILTINS_DIR)echo.c $(BUILTINS_DIR)env.c \
 		$(BUILTINS_DIR)unset.c  $(BUILTINS_DIR)utils.c \
-		$(SIGNAL_DIR)end_of_file.c
+		$(SIGNAL_DIR)end_of_file.c $(SIGNAL_DIR)signal_handler.c
 
 OBJS = $(SRCS:.c=.o)
 

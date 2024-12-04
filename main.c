@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:01:28 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/29 11:38:21 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:46:21 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+	ft_signal_handler();
 	init_data(&data);
 	create_env(&data, env);
 	while (1)
