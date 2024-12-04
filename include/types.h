@@ -6,7 +6,7 @@
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:46:14 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/03 17:47:21 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:00:49 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 
 # include <stdbool.h>
 
-typedef struct	s_list_env
+typedef struct s_list_env
 {
 	char				*str;
 	struct s_list_env	*next;
 	struct s_list_env	*prev;
 }				t_list_env;
 
-typedef struct	s_token
+typedef struct s_token
 {
 	char			*str;
 	bool			quote;
@@ -31,7 +31,7 @@ typedef struct	s_token
 	struct s_token	*prev;
 }				t_token;
 
-typedef struct	s_cmd
+typedef struct s_cmd
 {
 	char			**argv;
 	int				outfile;
@@ -48,6 +48,6 @@ typedef struct s_data
 	t_token		*token;
 	t_list_env	*env;
 	t_cmd		*cmd;
-}	t_data;
+}				t_data;
 
 #endif

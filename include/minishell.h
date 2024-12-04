@@ -6,13 +6,15 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:00:16 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/09 14:01:38 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:57:20 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "types.h"
+# include "function.h"
 # include <stdio.h>
 # include <unistd.h>
 # include <sys/types.h>
@@ -34,41 +36,6 @@
 # define CMD		6	//"|"
 # define ARG		7	//"|"
 # define TMP_FILE	"heredoc.tmp"
-
-typedef struct s_list_env
-{
-	char				*str;
-	struct s_list_env	*next;
-	struct s_list_env	*prev;
-}	t_list_env;
-
-typedef struct s_token
-{
-	char			*str;
-	bool			quote;
-	int				type;
-	struct s_token	*next;
-	struct s_token	*prev;
-}	t_token;
-
-typedef struct s_cmd
-{
-	char			**argv;
-	int				outfile;
-	int				infile;
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
-}	t_cmd;
-
-typedef struct s_data
-{
-	bool		sq;
-	bool		dq;
-	int			exit_code;
-	t_token		*token;
-	t_list_env	*env;
-	t_cmd		*cmd;
-}	t_data;
 
 /* parsing */
 int			check_quote(t_data *data, char *line);
@@ -110,7 +77,7 @@ size_t		ft_strspn(const char *s, const char *accept);
 int			check_pipe(t_data *data, t_token *token);
 
 /* exec */
-void		exec(t_data *data);
+void		*exec(t_data *data);
 void		ft_for_child(t_data *data, t_cmd *command, int *pipe_fd);
 void		redirection(t_cmd *command, int *pipe_fd);
 char		**get_current_env(t_list_env *env, int i, int lenght_list);

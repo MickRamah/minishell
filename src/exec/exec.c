@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:53:29 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/20 16:06:07 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:59:40 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	wait_process_child(t_data *data, t_cmd *command, pid_t *pid)
 	}
 }
 
-void	exec(t_data *data)
+void	*exec(t_data *data)
 {
 	t_cmd		*command;
 	int			pipe_fd[2];
@@ -80,11 +80,11 @@ void	exec(t_data *data)
 	pid_t		*pid;
 
 	command = data->cmd;
-	if (command && command->argv[0] && command->next == NULL && \
-		is_buildin(command))
+	if (command && command->argv[0] && command->next == NULL
+		&& is_buildin(command))
 	{
 		build(data, command, NULL);
-		return ;
+		return (ft_free_var(data));
 	}
 	pid = len_list_cmd(data, command);
 	i = 0;
@@ -98,5 +98,5 @@ void	exec(t_data *data)
 		i++;
 	}
 	wait_process_child(data, data->cmd, pid);
-	free(pid);
+	return (ft_free_var_exec(data, &pid));
 }

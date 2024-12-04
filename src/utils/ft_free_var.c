@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_free_var.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:20:55 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/04 17:14:43 by herakoto         ###   ########.fr       */
+/*   Created: 2024/12/03 17:45:21 by herakoto          #+#    #+#             */
+/*   Updated: 2024/12/04 16:56:33 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	count_arg(char **arg)
+void	*ft_free_var(t_data *data)
 {
-	int	i;
-
-	i = 0;
-	while (arg[i])
-		i++;
-	return (i);
+	if (data->token != NULL)
+		free_token(&data->token);
+	if (data->cmd != NULL)
+		free_cmd(&data->cmd);
+	return (NULL);
 }
 
-int	ft_strlen_export(char *str)
+void	*ft_free_var_exec(t_data *data, pid_t **pid)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	return (i);
+	ft_free_var(data);
+	free(*pid);
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: herakoto <herakoto@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 15:17:29 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/29 09:45:26 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:02:13 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,3 @@ int	ft_echo(char **args)
 		write(1, "\n", 1);
 	return (0);
 }
-

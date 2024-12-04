@@ -6,7 +6,7 @@
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:21:14 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 18:50:06 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:03:39 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	ft_atoi_exit(char *str, int *is_error)
 		i++;
 	if (str[i]
 		|| ((sign == 1 && exit_output > LONG_MAX)
-		|| (sign == -1 && (exit_output > (LONG_MAX - 1)))))
+			|| (sign == -1 && (exit_output > (LONG_MAX - 1)))))
 		*is_error = 1;
 	return ((int)((exit_output * sign) % 256));
 }

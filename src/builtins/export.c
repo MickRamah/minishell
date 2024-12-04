@@ -5,8 +5,9 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 17:14:07 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 14:13:15 by herakoto         ###   ########.fr       */
+/*   Created: 2024/12/04 17:03:15 by herakoto          #+#    #+#             */
+/*   Updated: 2024/12/04 17:39:22 by herakoto         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
@@ -50,8 +51,8 @@ static bool	valid_identifier(char *str)
 
 static int	ft_exist(char *str, t_list_env *env)
 {
-	int		i;
-	int		j;
+	int			i;
+	int			j;
 	t_list_env	*tmp;
 
 	if (!env)

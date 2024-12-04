@@ -6,7 +6,7 @@
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 15:37:12 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 14:30:08 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:44:55 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ static void	ft_update_pwd(t_data *data, char *arg)
 {
 	char	cwd[PATH_MAX];
 	char	*pwd;
-	t_list_env	*tmp;
-
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{

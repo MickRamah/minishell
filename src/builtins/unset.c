@@ -6,21 +6,11 @@
 /*   By: herakoto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:08:43 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/27 14:32:05 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:39:58 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static int	ft_strlen_export(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	return (i);
-}
 
 static int	ft_strcmp_export(char *s1, char *s2)
 {
@@ -31,7 +21,8 @@ static int	ft_strcmp_export(char *s1, char *s2)
 	{
 		if (s2[i + 1] == '=' && ft_strlen_export(s1) == ft_strlen_export(s2))
 			return (0);
-		else if (s2[i + 1] == '\0' && ft_strlen_export(s1) == ft_strlen_export(s2))
+		else if (s2[i + 1] == '\0'
+			&& ft_strlen_export(s1) == ft_strlen_export(s2))
 			return (0);
 		i++;
 	}
@@ -66,7 +57,7 @@ static t_list_env	*ft_exist(char *var, t_list_env *env)
 	return (NULL);
 }
 
-static void	ft_delete(char *var, t_list_env **env, t_list_env *searched)
+static void	ft_delete(t_list_env **env, t_list_env *searched)
 {
 	t_list_env	*tmp;
 
@@ -92,7 +83,7 @@ static void	ft_delete(char *var, t_list_env **env, t_list_env *searched)
 	tmp = NULL;
 }
 
-int			ft_unset(char **arg, t_list_env **env)
+int	ft_unset(char **arg, t_list_env **env)
 {
 	int			i;
 	int			count;
@@ -101,13 +92,13 @@ int			ft_unset(char **arg, t_list_env **env)
 	i = 1;
 	var = NULL;
 	count = count_arg(arg);
-    if (count < 2)
+	if (count < 2)
 		return (1);
 	while (i < count)
 	{
 		var = ft_exist(arg[i], *env);
 		if (var != NULL && ft_isequal(arg[i]) == 0)
-			ft_delete(arg[i], env, var);
+			ft_delete(env, var);
 		i++;
 	}
 	return (1);

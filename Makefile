@@ -6,7 +6,7 @@
 #    By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 16:34:14 by zramahaz          #+#    #+#              #
-#    Updated: 2024/10/10 16:10:33 by zramahaz         ###   ########.fr        #
+#    Updated: 2024/12/04 17:15:30 by herakoto         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,8 @@ SRC_DIR = src/
 
 PARS_DIR = src/parsing/
 
+SIGNAL_DIR = src/signal/
+
 UTLS_DIR = src/utils/
 
 EXEC_DIR = src/exec/
@@ -29,11 +31,12 @@ BUILTINS_DIR = src/builtins/
 SRCS = main.c $(PARS_DIR)quote.c $(PARS_DIR)create_token.c $(PARS_DIR)dollar_replace.c $(PARS_DIR)dollar_env.c \
 		$(PARS_DIR)cmd_fd.c $(PARS_DIR)create_cmd.c $(PARS_DIR)create_cmd_utils.c \
 		$(UTLS_DIR)ms_utils.c $(UTLS_DIR)list_token.c $(UTLS_DIR)debug.c \
-		$(UTLS_DIR)list_utils.c $(UTLS_DIR)ft_free.c \
+		$(UTLS_DIR)list_utils.c $(UTLS_DIR)ft_free.c $(UTLS_DIR)ft_free_var.c \
 		$(EXEC_DIR)exec.c $(EXEC_DIR)exec_part_2.c $(EXEC_DIR)here_doc.c $(EXEC_DIR)build.c $(EXEC_DIR)exec_utils.c \
 		$(BUILTINS_DIR)pwd.c $(BUILTINS_DIR)export.c $(BUILTINS_DIR)cd.c \
 		$(BUILTINS_DIR)ft_exit.c $(BUILTINS_DIR)echo.c $(BUILTINS_DIR)env.c \
-		$(BUILTINS_DIR)unset.c $(BUILTINS_DIR)export_utils.c
+		$(BUILTINS_DIR)unset.c  $(BUILTINS_DIR)utils.c \
+		$(SIGNAL_DIR)end_of_file.c
 
 OBJS = $(SRCS:.c=.o)
 

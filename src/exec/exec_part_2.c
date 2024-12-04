@@ -125,5 +125,4 @@ void	ft_for_child(t_data *data, t_cmd *command, int *pipe_fd)
 		close(pipe_fd[0]);
 	if (pipe_fd[1] && pipe_fd[1] != -1)
 		close(pipe_fd[1]);
-	free_data(data, data->exit_code);
 }
