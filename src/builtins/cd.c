@@ -6,12 +6,34 @@
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 15:37:12 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/04 15:44:55 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:09:06 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <limits.h>
+
+int	cd(t_data *data, char *path);
+
+static int	cd_no_arg(t_data *data)
+{
+	t_list_env	*tmp;
+	char		*path;
+	int			i;
+
+	tmp = data->env;
+	path = NULL;
+	i = 0;
+	while (tmp && ft_strncmp("HOME", tmp->str, 4) != 0)
+		tmp = tmp->next;
+	if (tmp == NULL)
+		return (0);
+	path = tmp->str;
+	while (path[i] && path[i] != '=')
+		i++;
+	if (path == NULL)
+		return (0);
+	return (cd(data, (path + (i + 1))));
+}
 
 static void	ft_update_oldpwd(t_data *data)
 {
@@ -58,22 +80,28 @@ static void	ft_update_pwd(t_data *data, char *arg)
 	free(pwd);
 }
 
-int	ft_cd(t_data *data, char **arg)
+int	cd(t_data *data, char *path)
 {
 	int	fd;
-
-	if (count_arg(arg) == 2)
+	
+	fd = chdir(path);
+	if (fd == 0)
 	{
-		fd = chdir(arg[1]);
-		if (fd == 0)
-		{
-			ft_update_oldpwd(data);
-			ft_update_pwd(data, arg[1]);
-		}
-		else if (fd == -1)
-			perror(arg[1]);
-		return (fd);
+		ft_update_oldpwd(data);
+		ft_update_pwd(data, path);
 	}
-	write(2, "too many arguments\n", 20);
+	else if (fd == -1)
+		perror(path);
+	return (fd);
+}
+
+int	ft_cd(t_data *data, char **arg)
+{
+	if (count_arg(arg) == 1)
+		return (cd_no_arg(data));
+	if (count_arg(arg) == 2)
+		return (cd(data, arg[1]));
+	else if (count_arg(arg) > 2)
+		write(2, "too many arguments\n", 20);
 	return (1);
 }
