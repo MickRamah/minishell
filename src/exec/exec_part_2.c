@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-static void	command_absolue(char *cmd_line, char **path)
+static void	cmd_abs_or_courant_dir(char *cmd_line, char **path)
 {
 	*path = ft_strdup(cmd_line);
 	if ((*path) == NULL)
@@ -80,12 +80,10 @@ static int	command_exist(t_data *data, char *cmd_line, char **path)
 {
 	struct stat	buffer;
 
-	if (cmd_line[0] != '/')
-	{
+	if (cmd_line[0] != '/' && cmd_line[0] != '.' && cmd_line[1] != '/')
 		cherch_cmd(cmd_line, path, data->env);
-	}
 	else
-		command_absolue(cmd_line, path);
+		cmd_abs_or_courant_dir(cmd_line, path);
 	if ((*path) == NULL)
 	{
 		data->exit_code = 127;
@@ -96,6 +94,16 @@ static int	command_exist(t_data *data, char *cmd_line, char **path)
 	{
 		write(2, cmd_line, ft_strlen(cmd_line));
 		write(2, " : Is a directory\n", 18);
+		free(*path);
+		data->exit_code = 126;
+		return (0);
+	}
+	if (!(buffer.st_mode & S_IXUSR) && !(buffer.st_mode & S_IXGRP) \
+			&& !(buffer.st_mode & S_IXOTH))
+	{
+		write(2, cmd_line, ft_strlen(cmd_line));
+		write(2, " : Permission denied\n", 21);
+		free(*path);
 		data->exit_code = 126;
 		return (0);
 	}

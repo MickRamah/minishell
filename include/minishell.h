@@ -34,6 +34,7 @@
 # define CMD		6	//"|"
 # define ARG		7	//"|"
 # define TMP_FILE	"heredoc.tmp"
+// # define ARG_MAX	256
 
 typedef struct s_list_env
 {

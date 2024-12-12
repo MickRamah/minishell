@@ -21,7 +21,7 @@ static bool	read_in_stdin(int fd, char *word, t_data *data, bool quote)
 		buf = readline("> ");
 		if (!buf)
 			break ;
-		if (!ft_strncmp(word, buf, INT_MAX))
+		if (ft_strncmp(word, buf, INT_MAX) == 0)
 			break ;
 		if (quote)
 		{

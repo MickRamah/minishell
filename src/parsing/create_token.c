@@ -22,6 +22,7 @@ int	append_in_token(t_token **begin, char *line, int type)
 		return (0);
 	new->next = NULL;
 	new->type = type;
+	new->quote = false;
 	new->str = ft_strdup(line);
 	free(line);
 	if (new->str == NULL)
