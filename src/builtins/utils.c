@@ -1,41 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 15:47:41 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/11 18:13:41 by herakoto         ###   ########.fr       */
+/*   Created: 2024/11/22 17:20:55 by herakoto          #+#    #+#             */
+/*   Updated: 2024/12/04 17:14:43 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ft_is_void(char *str)
+int	count_arg(char **arg)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
-	{
-		if (str[i + 1] == '=')
-			return (1);
+	while (arg[i])
 		i++;
-	}
-	return (0);
+	return (i);
 }
 
-int	ft_env(t_list_env *env)
+int	ft_strlen_export(char *str)
 {
-	t_list_env	*tmp;
+	int	i;
 
-	tmp = env;
-	while (tmp != NULL)
-	{
-		if (ft_is_void(tmp->str) == 1)
-			printf("%s\n", tmp->str);
-		tmp = tmp->next;
-	}
-	return (0);
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	return (i);
 }

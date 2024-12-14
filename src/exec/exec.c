@@ -12,23 +12,22 @@
 
 #include "../../include/minishell.h"
 
-// static int	*len_list_cmd(t_data *data, t_cmd *command)
-// {
-// 	int		len;
-// 	int		*pid;
+static int	*len_list_cmd(t_data *data, t_cmd *command)
+{
+	int		len;
+	int		*pid;
 
-// 	len = 0;
-// 	while (command)
-// 	{
-// 		len++;
-// 		command = command->next;
-// 	}
-// 	printf("len = %d\n", len);
-// 	pid = (pid_t *)malloc(sizeof(pid_t) * len);
-// 	if (pid == NULL)
-// 		free_data(data, 1);
-// 	return (pid);
-// }
+	len = 0;
+	while (command)
+	{
+		len++;
+		command = command->next;
+	}
+	pid = (pid_t *)malloc(sizeof(pid_t) * len);
+	if (pid == NULL)
+		free_data(data, 1);
+	return (pid);
+}
 
 static void	ft_for_parent(t_cmd *command, int *pipe_fd)
 {
@@ -41,13 +40,17 @@ static void	ft_for_parent(t_cmd *command, int *pipe_fd)
 		close(pipe_fd[0]);
 }
 
-static void	execute_command(t_data *data, t_cmd *command, int *pipe_fd, \
-						int *child_process)
+static void	execute_command(t_data *data, t_cmd *command, \
+							int *child_process, int pos)
 {
-	*child_process = fork();
-	if (*child_process < 0)
+	int			pipe_fd[2];
+
+	if (pipe(pipe_fd) == -1)
 		free_data(data, 1);
-	else if (*child_process == 0)
+	*(child_process + pos) = fork();
+	if (*(child_process + pos) < 0)
+		free_data(data, 1);
+	else if (*(child_process + pos) == 0)
 	{
 		if (command == NULL || command->argv[0] == NULL \
 			|| command->argv[0][0] == 0)
@@ -60,10 +63,10 @@ static void	execute_command(t_data *data, t_cmd *command, int *pipe_fd, \
 				write(2, "minishell: : command not found\n", 31);
 			free_data(data, 127);
 		}
+		free(child_process);
 		ft_for_child(data, command, pipe_fd);
 	}
-	else
-		ft_for_parent(command, pipe_fd);
+	ft_for_parent(command, pipe_fd);
 }
 
 static void	wait_process_child(t_data *data, t_cmd *command, pid_t *pid)
@@ -85,8 +88,7 @@ static void	wait_process_child(t_data *data, t_cmd *command, pid_t *pid)
 void	exec(t_data *data)
 {
 	t_cmd		*command;
-	int			pipe_fd[2];
-	pid_t		pid[1024];
+	pid_t		*pid;
 	int			i;
 
 	command = data->cmd;
@@ -96,15 +98,15 @@ void	exec(t_data *data)
 		build(data, command, NULL);
 		return ;
 	}
+	pid = len_list_cmd(data, command);
 	i = 0;
 	while (command != NULL)
 	{
-		if (pipe(pipe_fd) == -1)
-			free_data(data, 1);
 		pid[i] = 0;
-		execute_command(data, command, pipe_fd, &pid[i]);
+		execute_command(data, command, pid, i);
 		command = command->next;
 		i++;
 	}
 	wait_process_child(data, data->cmd, pid);
+	free(pid);
 }

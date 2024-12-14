@@ -76,7 +76,7 @@ int	parseline(t_data *data, char *line)
 	if (!replace_dollar(&line, data) || !create_list_token(&data->token, line))
 	{
 		free(line);
-		printf("malloc ERROR\n");
+		write(2, "malloc ERROR\n", 13);
 		free_data(data, 1);
 	}
 	free(line);
@@ -103,6 +103,7 @@ int	main(int argc, char **argv, char **env)
 	create_env(&data, env);
 	while (1)
 	{
+		line = NULL;
 		line = readline("minishell> ");
 		if (line == NULL)
 			return (1);

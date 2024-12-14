@@ -117,20 +117,24 @@ void		redirection(t_cmd *command, int *pipe_fd);
 char		**get_current_env(t_list_env *env, int i, int lenght_list);
 
 int			here_doc(char *word, t_data *data, bool quote);
+int			check_file(t_data *data, char *cmd_line, char **path \
+				, struct stat buffer);
 
 int			is_buildin(t_cmd *command);
 void		build(t_data *data, t_cmd *command, int *pipe_fd);
 
 /* builtins */
 int			ft_pwd(void);
+int			ft_env(t_list_env *env);
+int			ft_is_void(char *str);
+int			ft_export(char **str, t_list_env **env);
+bool		export(char *str, t_list_env **env);
+int			ft_strlen_export(char *str);
+int			ft_unset(char **arg, t_list_env **env);
 void		ft_exit(t_data *data, char **args);
 int			ft_echo(char **args);
-int			ft_env(t_list_env *env);
-int			ft_export(char **str, t_list_env **env);
-bool		export_no_args(t_list_env *env);
-bool		export(char *str, t_list_env **env);
-int			ft_unset(char **str, t_list_env **env);
-int			ft_cd(t_data *data, char **params);
-int			len_list(t_list_env *list);
+int			ft_cd(t_data *data, char **arg);
+int			count_arg(char **arg);
+int			ft_strlen_export(char *str);
 
 #endif

@@ -89,24 +89,15 @@ static int	command_exist(t_data *data, char *cmd_line, char **path)
 		data->exit_code = 127;
 		return (0);
 	}
-	stat(*path, &buffer);
-	if (!S_ISREG(buffer.st_mode))
+	if (stat(*path, &buffer) == -1)
 	{
-		write(2, cmd_line, ft_strlen(cmd_line));
-		write(2, " : Is a directory\n", 18);
+		perror("stat failed");
 		free(*path);
-		data->exit_code = 126;
+		data->exit_code = 1;
 		return (0);
 	}
-	if (!(buffer.st_mode & S_IXUSR) && !(buffer.st_mode & S_IXGRP) \
-			&& !(buffer.st_mode & S_IXOTH))
-	{
-		write(2, cmd_line, ft_strlen(cmd_line));
-		write(2, " : Permission denied\n", 21);
-		free(*path);
-		data->exit_code = 126;
+	if (check_file(data, cmd_line, path, buffer) == 0)
 		return (0);
-	}
 	return (1);
 }
 

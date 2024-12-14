@@ -12,7 +12,27 @@
 
 #include "../../include/minishell.h"
 
-//checks syntax
+static int	ft_export_no_args(t_list_env *env)
+{
+	t_list_env	*tmp;
+	int			j;
+
+	tmp = env;
+	while (tmp != NULL)
+	{
+		printf("declare -x ");
+		j = 0;
+		while ((tmp->str)[j] && (tmp->str)[j] != '=')
+			printf("%c", (tmp->str)[j++]);
+		if ((tmp->str)[j] && (tmp->str)[j] == '=')
+			printf("=\"%s\"\n", &(tmp->str)[j + 1]);
+		else
+			printf("\n");
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
 static bool	valid_identifier(char *str)
 {
 	int	i;
@@ -29,8 +49,7 @@ static bool	valid_identifier(char *str)
 	return (true);
 }
 
-//checks if identifier already in env
-static int	exist(char *str, t_list_env *env)
+static int	ft_exist(char *str, t_list_env *env)
 {
 	int			i;
 	int			j;
@@ -45,10 +64,12 @@ static int	exist(char *str, t_list_env *env)
 	tmp = env;
 	while (tmp != NULL)
 	{
-		if (!ft_strncmp(tmp->str, str, i) && (tmp->str[i] == '\0' || \
-			tmp->str[i] == '='))
+		if (ft_strncmp(tmp->str, str, i) == 0
+			&& (tmp->str[i] == '\0' || tmp->str[i] == '='))
 		{
-			return (j);
+			if (ft_is_void(str) == 1)
+				return (j);
+			return (-2);
 		}
 		tmp = tmp->next;
 		j++;
@@ -63,7 +84,9 @@ bool	export(char *str, t_list_env **env)
 	char		*value;
 	t_list_env	*tmp;
 
-	pos = exist(str, (*env));
+	pos = ft_exist(str, (*env));
+	if (pos == -2)
+		return (true);
 	value = ft_strdup(str);
 	if (!value)
 		return (false);
@@ -71,11 +94,8 @@ bool	export(char *str, t_list_env **env)
 	{
 		tmp = *env;
 		i = 0;
-		while (i < pos)
-		{
+		while (i++ < pos)
 			tmp = tmp->next;
-			i++;
-		}
 		free(tmp->str);
 		tmp->str = value;
 	}
@@ -85,21 +105,19 @@ bool	export(char *str, t_list_env **env)
 	return (true);
 }
 
-//export
 int	ft_export(char **str, t_list_env **env)
 {
-	int	exit_code;
 	int	i;
+	int	exit_code;
+	int	count;
 
-	exit_code = 0;
 	i = 1;
-	if (!str || !str[i])
-	{
-		if (*env && !export_no_args((*env)))
-			return (write(2, "malloc error\n", 13));
-		return (0);
-	}
-	while (str[i])
+	exit_code = 0;
+	count = count_arg(str);
+	if (count == 1)
+		return (ft_export_no_args(*env));
+	count = count_arg(str);
+	while (i < count)
 	{
 		if (!valid_identifier(str[i]))
 		{
