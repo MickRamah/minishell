@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-static void	command_absolue(char *cmd_line, char **path)
+static void	cmd_abs_or_courant_dir(char *cmd_line, char **path)
 {
 	*path = ft_strdup(cmd_line);
 	if ((*path) == NULL)
@@ -80,25 +80,24 @@ static int	command_exist(t_data *data, char *cmd_line, char **path)
 {
 	struct stat	buffer;
 
-	if (cmd_line[0] != '/')
-	{
+	if (cmd_line[0] != '/' && cmd_line[0] != '.' && cmd_line[1] != '/')
 		cherch_cmd(cmd_line, path, data->env);
-	}
 	else
-		command_absolue(cmd_line, path);
+		cmd_abs_or_courant_dir(cmd_line, path);
 	if ((*path) == NULL)
 	{
 		data->exit_code = 127;
 		return (0);
 	}
-	stat(*path, &buffer);
-	if (!S_ISREG(buffer.st_mode))
+	if (stat(*path, &buffer) == -1)
 	{
-		write(2, cmd_line, ft_strlen(cmd_line));
-		write(2, " : Is a directory\n", 18);
-		data->exit_code = 126;
+		perror("stat failed");
+		free(*path);
+		data->exit_code = 1;
 		return (0);
 	}
+	if (check_file(data, cmd_line, path, buffer) == 0)
+		return (0);
 	return (1);
 }
 

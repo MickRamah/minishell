@@ -28,11 +28,18 @@ static int	check_new_line(char *str)
 	return (0);
 }
 
-static void	write_echo(int count, int i, bool new_line, char **args)
+int	ft_echo(char **args)
 {
+	int		count;
+	int		i;
+	bool	new_line;
+
+	count = count_arg(args);
+	i = 1;
+	new_line = true;
 	while (args[i] && check_new_line(args[i]))
 	{
-		++i;
+		i++;
 		new_line = false;
 	}
 	while (i < count)
@@ -44,19 +51,5 @@ static void	write_echo(int count, int i, bool new_line, char **args)
 	}
 	if (new_line)
 		write(1, "\n", 1);
-}
-
-int	ft_echo(char **args)
-{
-	int		count;
-	int		i;
-	bool	new_line;
-
-	count = 0;
-	while (args[count])
-		++count;
-	i = 1;
-	new_line = true;
-	write_echo(count, i, new_line, args);
 	return (0);
 }

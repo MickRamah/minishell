@@ -12,58 +12,61 @@
 
 #include "../../include/minishell.h"
 
-static int	count_arg(char **params)
-{
-	int	count;
+int	cd(t_data *data, char *path);
 
-	count = 0;
-	while (params[count])
-		count++;
-	return (count);
-}
-
-static void	error_malloc(void)
-{
-	write(2, "malloc error\n", 13);
-	return ;
-}
-
-static void	update_oldpwd(t_data *data)
+static int	cd_no_arg(t_data *data)
 {
 	t_list_env	*tmp;
-	char		*test;
-	int			len;
+	char		*path;
+	int			i;
 
 	tmp = data->env;
-	test = NULL;
-	len = len_list(tmp);
-	while (len--)
-	{
-		if (ft_strncmp(tmp->str, "PWD=", 3) == 0)
-			test = tmp->str;
+	path = NULL;
+	i = 0;
+	while (tmp && ft_strncmp("HOME", tmp->str, 4) != 0)
 		tmp = tmp->next;
-	}
-	if (!test)
-		export("OLDPWD", &data->env);
-	if (test)
-	{
-		test = ft_strjoin("OLD", test);
-		if (!test)
-			return (error_malloc());
-		export(test, &data->env);
-	}
-	free(test);
+	if (tmp == NULL)
+		return (0);
+	path = tmp->str;
+	while (path[i] && path[i] != '=')
+		i++;
+	if (path == NULL)
+		return (0);
+	return (cd(data, (path + (i + 1))));
 }
 
-static void	update_pwd(t_data *data, char *param)
+static void	ft_update_oldpwd(t_data *data)
+{
+	t_list_env	*tmp;
+	char		*oldpwd;
+
+	tmp = data->env;
+	while (tmp != NULL)
+	{
+		if (ft_strncmp("PWD", tmp->str, 3) == 0)
+			break ;
+		tmp = tmp->next;
+	}
+	if (tmp == NULL)
+		export("OLDPWD", &data->env);
+	oldpwd = ft_strjoin("OLD", tmp->str);
+	if (!oldpwd)
+	{
+		write(2, "malloc error\n", 13);
+		return ;
+	}
+	export(oldpwd, &data->env);
+	free(oldpwd);
+}
+
+static void	ft_update_pwd(t_data *data, char *arg)
 {
 	char	cwd[4096];
 	char	*pwd;
 
-	update_oldpwd(data);
-	if (getcwd(cwd, 4096) == NULL)
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		perror(param);
+		perror(arg);
 		return ;
 	}
 	pwd = ft_strjoin("PWD=", cwd);
@@ -73,24 +76,32 @@ static void	update_pwd(t_data *data, char *param)
 		return ;
 	}
 	export(pwd, &data->env);
+	printf("pwd: %s\n", pwd);
 	free(pwd);
 }
 
-int	ft_cd(t_data *data, char **params)
+int	cd(t_data *data, char *path)
 {
-	int	res;
+	int	fd;
 
-	res = 0;
-	if (count_arg(params) == 2)
+	fd = chdir(path);
+	if (fd == 0)
 	{
-		res = chdir(params[1]);
-		if (res == 0)
-			update_pwd(data, params[1]);
-		if (res == -1)
-			res *= -1;
-		if (res == 1)
-			perror(params[1]);
-		return (res);
+		ft_update_oldpwd(data);
+		ft_update_pwd(data, path);
 	}
+	else if (fd == -1)
+		perror(path);
+	return (fd);
+}
+
+int	ft_cd(t_data *data, char **arg)
+{
+	if (count_arg(arg) == 1)
+		return (cd_no_arg(data));
+	if (count_arg(arg) == 2)
+		return (cd(data, arg[1]));
+	else if (count_arg(arg) > 2)
+		write(2, "too many arguments\n", 20);
 	return (1);
 }

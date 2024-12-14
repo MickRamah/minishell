@@ -33,7 +33,7 @@ SRCS = main.c $(PARS_DIR)quote.c $(PARS_DIR)create_token.c $(PARS_DIR)dollar_rep
 		$(EXEC_DIR)exec.c $(EXEC_DIR)exec_part_2.c $(EXEC_DIR)here_doc.c $(EXEC_DIR)build.c $(EXEC_DIR)exec_utils.c \
 		$(BUILTINS_DIR)pwd.c $(BUILTINS_DIR)export.c $(BUILTINS_DIR)cd.c \
 		$(BUILTINS_DIR)ft_exit.c $(BUILTINS_DIR)echo.c $(BUILTINS_DIR)env.c \
-		$(BUILTINS_DIR)unset.c $(BUILTINS_DIR)export_utils.c
+		$(BUILTINS_DIR)unset.c $(BUILTINS_DIR)utils.c
 
 OBJS = $(SRCS:.c=.o)
 

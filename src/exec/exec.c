@@ -40,20 +40,33 @@ static void	ft_for_parent(t_cmd *command, int *pipe_fd)
 		close(pipe_fd[0]);
 }
 
-static void	execute_command(t_data *data, t_cmd *command, int *pipe_fd, \
-						int child_process)
+static void	execute_command(t_data *data, t_cmd *command, \
+							int *child_process, int pos)
 {
-	child_process = fork();
-	if (child_process < 0)
+	int			pipe_fd[2];
+
+	if (pipe(pipe_fd) == -1)
 		free_data(data, 1);
-	else if (child_process == 0)
+	*(child_process + pos) = fork();
+	if (*(child_process + pos) < 0)
+		free_data(data, 1);
+	else if (*(child_process + pos) == 0)
 	{
+		if (command == NULL || command->argv[0] == NULL \
+			|| command->argv[0][0] == 0)
+		{
+			if (pipe_fd[0] && pipe_fd[0] != -1)
+				close(pipe_fd[0]);
+			if (pipe_fd[1] && pipe_fd[1] != -1)
+				close(pipe_fd[1]);
+			if (command && command->argv[0] && command->argv[0][0] == 0)
+				write(2, "minishell: : command not found\n", 31);
+			free_data(data, 127);
+		}
+		free(child_process);
 		ft_for_child(data, command, pipe_fd);
 	}
-	else
-	{
-		ft_for_parent(command, pipe_fd);
-	}
+	ft_for_parent(command, pipe_fd);
 }
 
 static void	wait_process_child(t_data *data, t_cmd *command, pid_t *pid)
@@ -75,9 +88,8 @@ static void	wait_process_child(t_data *data, t_cmd *command, pid_t *pid)
 void	exec(t_data *data)
 {
 	t_cmd		*command;
-	int			pipe_fd[2];
-	int			i;
 	pid_t		*pid;
+	int			i;
 
 	command = data->cmd;
 	if (command && command->argv[0] && command->next == NULL && \
@@ -90,10 +102,8 @@ void	exec(t_data *data)
 	i = 0;
 	while (command != NULL)
 	{
-		if (pipe(pipe_fd) == -1)
-			free_data(data, 1);
 		pid[i] = 0;
-		execute_command(data, command, pipe_fd, pid[i]);
+		execute_command(data, command, pid, i);
 		command = command->next;
 		i++;
 	}
