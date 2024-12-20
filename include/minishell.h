@@ -34,7 +34,8 @@
 # define CMD		6	//"|"
 # define ARG		7	//"|"
 # define TMP_FILE	"heredoc.tmp"
-// # define ARG_MAX	256
+
+extern int	g_signal_code;
 
 typedef struct s_list_env
 {
@@ -65,7 +66,7 @@ typedef struct s_data
 {
 	bool		sq;
 	bool		dq;
-	int			exit_code;
+	int			*exit_code;
 	t_token		*token;
 	t_list_env	*env;
 	t_cmd		*cmd;
@@ -75,11 +76,12 @@ typedef struct s_data
 int			check_quote(t_data *data, char *line);
 void		change_quote(char c, bool *dq, bool *sq);
 
-int			replace_dollar(char **line, t_data *data);
+int			replace_dollar(char **line, t_data *data, int i);
 int			exist_in_env(char *line, t_list_env *env, int *index, char **str);
 int			len_var(char *line, char *str);
 
-int			create_list_token(t_token **begin, char *command);
+int			create_list_token(t_data *data, t_token **begin, char *command, \
+								int *status);
 int			append_in_token(t_token **begin, char *line, int type);
 int			add_special(t_token **begin, char **command);
 int			is_special(char *command);
@@ -136,5 +138,9 @@ int			ft_echo(char **args);
 int			ft_cd(t_data *data, char **arg);
 int			count_arg(char **arg);
 int			ft_strlen_export(char *str);
+
+void		signals(void);
+void		handle_sigint_heredoc(int code);
+void		handle_sigint(int code);
 
 #endif

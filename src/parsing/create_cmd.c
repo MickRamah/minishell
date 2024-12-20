@@ -106,7 +106,7 @@ int	create_list_cmd(t_data *data)
 		status = append_cmd(&data->cmd, &begin, nb, data);
 		if (status == -1)
 		{
-			data->exit_code = 2;
+			*(data->exit_code) = 2;
 			return (0);
 		}
 		if (status == 0)

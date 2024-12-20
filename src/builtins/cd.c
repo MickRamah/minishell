@@ -48,7 +48,7 @@ static void	ft_update_oldpwd(t_data *data)
 		tmp = tmp->next;
 	}
 	if (tmp == NULL)
-		export("OLDPWD", &data->env);
+		return ;
 	oldpwd = ft_strjoin("OLD", tmp->str);
 	if (!oldpwd)
 	{

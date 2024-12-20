@@ -79,6 +79,7 @@ static void	ft_delete(t_list_env **env, t_list_env *searched)
 		((tmp)->prev)->next = (tmp)->next;
 		((tmp)->next)->prev = (tmp)->prev;
 	}
+	free(tmp->str);
 	free(tmp);
 	tmp = NULL;
 }
@@ -101,5 +102,5 @@ int	ft_unset(char **arg, t_list_env **env)
 			ft_delete(env, var);
 		i++;
 	}
-	return (1);
+	return (0);
 }

@@ -60,10 +60,10 @@ void	ft_exit(t_data *data, char **args)
 	else if (count_arg(args) > 2)
 	{
 		write(2, "exit: too many arguments\n", 25);
-		data->exit_code = 1;
+		*(data->exit_code) = 1;
 		return ;
 	}
 	if (count_arg(args) == 1)
-		free_data(data, data->exit_code);
+		free_data(data, *(data->exit_code));
 	free_data(data, exit_output);
 }

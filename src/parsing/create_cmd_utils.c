@@ -16,7 +16,7 @@ static int	check_redirection_error(t_token *token, t_data *data)
 {
 	if (token->next == NULL)
 	{
-		data->exit_code = 2;
+		*(data->exit_code) = 2;
 		write(2, "minishell: syntax error near \
 		unexpected token `newline'\n", 56);
 		return (0);
@@ -25,7 +25,7 @@ static int	check_redirection_error(t_token *token, t_data *data)
 		token->next->type == HEREDOC || token->next->type == TRUNC || \
 		token->next->type == INPUT || token->next->type == PIPE))
 	{
-		data->exit_code = 2;
+		*(data->exit_code) = 2;
 		if (token->next->type == APPEND)
 			write(2, "minishell: syntax error near \
 			unexpected token `>>'\n", 51);
@@ -59,7 +59,7 @@ int	ft_check_error(t_token *begin, t_data *data)
 			if (begin->type == PIPE && begin->next && begin->next->type == PIPE)
 			{
 				printf("minishell: syntax error near unexpected token `|'\n");
-				data->exit_code = 2;
+				*(data->exit_code) = 2;
 				return (1);
 			}
 			begin = begin->next;

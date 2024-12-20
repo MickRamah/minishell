@@ -62,13 +62,13 @@ int	check_quote(t_data *data, char *line)
 		if (line[i] == '\'' && !close_quote(line, &i, '\''))
 		{
 			write(2, "quote is open\n", 14);
-			data->exit_code = 2;
+			*(data->exit_code) = 2;
 			return (0);
 		}
 		else if (line[i] == '"' && !close_quote(line, &i, '"'))
 		{
 			write(2, "quote is open\n", 14);
-			data->exit_code = 2;
+			*(data->exit_code) = 2;
 			return (0);
 		}
 		i++;

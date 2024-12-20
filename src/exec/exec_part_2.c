@@ -86,14 +86,14 @@ static int	command_exist(t_data *data, char *cmd_line, char **path)
 		cmd_abs_or_courant_dir(cmd_line, path);
 	if ((*path) == NULL)
 	{
-		data->exit_code = 127;
+		*(data->exit_code) = 127;
 		return (0);
 	}
 	if (stat(*path, &buffer) == -1)
 	{
 		perror("stat failed");
 		free(*path);
-		data->exit_code = 1;
+		*(data->exit_code) = 1;
 		return (0);
 	}
 	if (check_file(data, cmd_line, path, buffer) == 0)
@@ -124,5 +124,5 @@ void	ft_for_child(t_data *data, t_cmd *command, int *pipe_fd)
 		close(pipe_fd[0]);
 	if (pipe_fd[1] && pipe_fd[1] != -1)
 		close(pipe_fd[1]);
-	free_data(data, data->exit_code);
+	free_data(data, *(data->exit_code));
 }

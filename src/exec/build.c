@@ -37,21 +37,21 @@ int	is_buildin(t_cmd *command)
 static void	build_execution_2(t_data *data, t_cmd *command)
 {
 	if (!ft_strncmp("env", command->argv[0], 3))
-		data->exit_code = ft_env(data->env);
+		*(data->exit_code) = ft_env(data->env);
 	else if (!ft_strncmp("export", command->argv[0], 6))
-		data->exit_code = ft_export(command->argv, &data->env);
+		*(data->exit_code) = ft_export(command->argv, &data->env);
 	else if (!ft_strncmp("unset", command->argv[0], 5))
-		data->exit_code = ft_unset(command->argv, &data->env);
+		*(data->exit_code) = ft_unset(command->argv, &data->env);
 }
 
 static void	build_execution(t_data *data, t_cmd *command, int save_out)
 {
 	if (ft_strncmp("pwd", command->argv[0], 3) == 0)
-		data->exit_code = ft_pwd();
+		*(data->exit_code) = ft_pwd();
 	else if (!ft_strncmp("echo", command->argv[0], 4))
-		data->exit_code = ft_echo(command->argv);
+		*(data->exit_code) = ft_echo(command->argv);
 	else if (!ft_strncmp("cd", command->argv[0], 2))
-		data->exit_code = ft_cd(data, command->argv);
+		*(data->exit_code) = ft_cd(data, command->argv);
 	else if (ft_strncmp("exit", command->argv[0], 4) == 0)
 	{
 		if (command->outfile >= 0)

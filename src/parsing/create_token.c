@@ -91,9 +91,6 @@ static void	len_cmd(char *command, int *quote, int *lenght)
 		}
 		if (command[*lenght])
 			(*lenght)++;
-		if (command[*lenght] && command[*lenght] != ' ' \
-			&& command[*lenght] != '"' && command[*lenght] != '\'')
-			(*lenght)++;
 	}
 }
 
@@ -125,8 +122,13 @@ static int	add_cmd(t_token **begin, char **command)
 	return (1);
 }
 
-int	create_list_token(t_token **begin, char *line)
+int	create_list_token(t_data *data, t_token **begin, char *line, int *status)
 {
+	if (!check_quote(data, line))
+	{
+		*status = -1;
+		return (0);
+	}
 	while (*line)
 	{
 		line += ft_strspn(line, " ");

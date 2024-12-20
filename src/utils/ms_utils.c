@@ -103,7 +103,7 @@ int	check_pipe(t_data *data, t_token *token)
 	if (token && token->type == PIPE)
 	{
 		write(2, "minishell: syntax error near unexpected token `|'\n", 51);
-		data->exit_code = 2;
+		*(data->exit_code) = 2;
 		free_token(&data->token);
 		free_cmd(&data->cmd);
 		return (0);
@@ -111,7 +111,7 @@ int	check_pipe(t_data *data, t_token *token)
 	if (last && last->type == PIPE)
 	{
 		write(2, "Error: Unclosed pipe\n", 21);
-		data->exit_code = 2;
+		*(data->exit_code) = 2;
 		free_token(&data->token);
 		free_cmd(&data->cmd);
 		return (0);

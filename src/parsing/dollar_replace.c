@@ -32,7 +32,7 @@ static int	dollar_point_interrogation(t_data *data, char **str)
 	char	*tmp;
 	char	*tmp2;
 
-	tmp = ft_itoa(data->exit_code);
+	tmp = ft_itoa(*(data->exit_code));
 	if (!tmp)
 		return (0);
 	tmp2 = ft_strjoin(*str, tmp);
@@ -80,12 +80,10 @@ static int	check_heredoc(char *line, int i)
 	return (0);
 }
 
-int	replace_dollar(char **line, t_data *data)
+int	replace_dollar(char **line, t_data *data, int i)
 {
-	int		i;
 	char	*str;
 
-	i = 0;
 	str = ft_strdup("");
 	if (str == NULL)
 		return (0);
@@ -96,7 +94,8 @@ int	replace_dollar(char **line, t_data *data)
 			while (line[0][i] && !is_space(line[0][i]))
 				add_char(line[0][i++], &str);
 		if (line[0][i] == '$' && (isalpha(line[0][i + 1]) || \
-			line[0][i + 1] == '?') && (!data->sq || data->dq))
+			line[0][i + 1] == '?' || line[0][i + 1] == '"' || \
+			line[0][i + 1] == '\'') && (!data->sq || data->dq))
 		{
 			if (add_dollar(data, line[0], &str, &i) == 0)
 				return (0);

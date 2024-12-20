@@ -12,12 +12,16 @@
 
 #include "./include/minishell.h"
 
-void	create_env(t_data *data, char **env)
+int	g_signal_code;
+
+void	create_env(t_data *data, int argc, char **argv, char **env)
 {
 	t_list_env	*list;
 	int			i;
 	char		*tmp;
 
+	(void)argc;
+	(void)argv;
 	i = 0;
 	list = NULL;
 	while (env[i])
@@ -41,12 +45,14 @@ void	create_env(t_data *data, char **env)
 
 void	init_data(t_data *data)
 {
+	signal(SIGINT, handle_sigint);
 	data->sq = false;
 	data->dq = false;
 	data->cmd = NULL;
 	data->token = NULL;
 	data->env = NULL;
-	data->exit_code = 0;
+	g_signal_code = 0;
+	data->exit_code = &g_signal_code;
 }
 
 int	empty_line(char *line)
@@ -68,28 +74,31 @@ int	parseline(t_data *data, char *line)
 {
 	int	status;
 
+	status = 0;
 	if (!check_quote(data, line))
 	{
 		free(line);
 		return (0);
 	}
-	if (!replace_dollar(&line, data) || !create_list_token(&data->token, line))
+	if (!replace_dollar(&line, data, status) \
+		|| !create_list_token(data, &data->token, line, &status))
 	{
 		free(line);
+		if (status == -1)
+			return (0);
 		write(2, "malloc ERROR\n", 13);
 		free_data(data, 1);
 	}
 	free(line);
-	print_token(data->token);
 	if (!create_list_cmd(data))
 	{
 		free_token(&data->token);
 		free_cmd(&data->cmd);
 		return (0);
 	}
+	print_token(data->token);
 	print_cmd(data->cmd);
-	status = check_pipe(data, data->token);
-	return (status);
+	return (check_pipe(data, data->token));
 }
 
 int	main(int argc, char **argv, char **env)
@@ -97,16 +106,16 @@ int	main(int argc, char **argv, char **env)
 	t_data	data;
 	char	*line;
 
-	(void)argc;
-	(void)argv;
 	init_data(&data);
-	create_env(&data, env);
+	create_env(&data, argc, argv, env);
 	while (1)
 	{
-		line = NULL;
 		line = readline("minishell> ");
 		if (line == NULL)
-			return (1);
+		{
+			printf("exit\n");
+			free_data(&data, *(data.exit_code));
+		}
 		if (empty_line(line))
 			continue ;
 		add_history(line);

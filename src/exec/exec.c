@@ -52,15 +52,16 @@ static void	execute_command(t_data *data, t_cmd *command, \
 		free_data(data, 1);
 	else if (*(child_process + pos) == 0)
 	{
-		if (command == NULL || command->argv[0] == NULL \
-			|| command->argv[0][0] == 0)
+		if (!command || !(command->argv[0]) || !(command->argv[0][0]))
 		{
+			free(child_process);
 			if (pipe_fd[0] && pipe_fd[0] != -1)
 				close(pipe_fd[0]);
 			if (pipe_fd[1] && pipe_fd[1] != -1)
 				close(pipe_fd[1]);
-			if (command && command->argv[0] && command->argv[0][0] == 0)
-				write(2, "minishell: : command not found\n", 31);
+			if (command && command->argv[0] == NULL)
+				free_data(data, g_signal_code);
+			write(2, "minishell: : command not found\n", 31);
 			free_data(data, 127);
 		}
 		free(child_process);
@@ -75,11 +76,12 @@ static void	wait_process_child(t_data *data, t_cmd *command, pid_t *pid)
 	int	i;
 
 	i = 0;
+	(void)data;
 	while (command)
 	{
 		waitpid(pid[i], &status, 0);
 		if (WIFEXITED(status))
-			data->exit_code = WEXITSTATUS(status);
+			*(data->exit_code) = WEXITSTATUS(status);
 		i++;
 		command = command->next;
 	}
