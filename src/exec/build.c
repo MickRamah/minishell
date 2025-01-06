@@ -62,11 +62,15 @@ static void	build_execution(t_data *data, t_cmd *command, int save_out)
 		ft_exit(data, command->argv);
 	}
 	build_execution_2(data, command);
-	if (command->outfile >= 0)
-	{
-		dup2(save_out, STDOUT_FILENO);
-		close(save_out);
-	}
+}
+
+static void	ft_dup(t_cmd *command, int *save_out)
+{
+	*save_out = dup(1);
+	dup2(command->outfile, 1);
+	close(command->outfile);
+	if (*save_out >= 0 && command->next != NULL)
+		close(*save_out);
 }
 
 void	build(t_data *data, t_cmd *command, int *pipe_fd)
@@ -76,18 +80,14 @@ void	build(t_data *data, t_cmd *command, int *pipe_fd)
 	save_out = -1;
 	if (pipe_fd != NULL)
 	{
-		close(pipe_fd[0]);
 		if (command->outfile < 0 && command->next != NULL)
 			command->outfile = pipe_fd[1];
 		else
 			close(pipe_fd[1]);
+		// ft_close_all_fd(command);
 	}
 	if (command->outfile >= 0)
-	{
-		save_out = dup(1);
-		dup2(command->outfile, 1);
-		close(command->outfile);
-	}
+		ft_dup(command, &save_out);
 	build_execution(data, command, save_out);
 	if (command->outfile >= 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:00:16 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/09 14:01:38 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/23 16:52:38 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <stdbool.h>
+# include <errno.h>
 # include "../libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -36,6 +37,17 @@
 # define TMP_FILE	"heredoc.tmp"
 
 extern int	g_signal_code;
+
+typedef enum e_state
+{
+	HEREDOCS,
+	GENERAL
+}			t_state;
+
+typedef struct s_signal
+{
+	t_state	state;
+}				t_signal;
 
 typedef struct s_list_env
 {
@@ -72,75 +84,90 @@ typedef struct s_data
 	t_cmd		*cmd;
 }	t_data;
 
+/* builtins */
+int			ft_cd(t_data *data, char **arg);
+
+int			ft_echo(char **args);
+
+int			ft_find_egal(char *str);
+int			ft_env(t_list_env *env);
+
+int			ft_export(char **str, t_list_env **env);
+bool		export(char *str, t_list_env **env);
+
+void		ft_exit(t_data *data, char **args);
+
+int			ft_pwd(void);
+
+int			ft_unset(char **arg, t_list_env **env);
+
+int			ft_is_equal(char *str);
+int			count_arg(char **arg);
+int			ft_strlen_export(char *str);
+
+/* exec */
+int			is_buildin(t_cmd *command);
+void		build(t_data *data, t_cmd *command, int *pipe_fd);
+
+void		ft_for_child(t_data *data, t_cmd *command, int *pipe_fd);
+
+void		ft_close_all_fd(t_cmd *command);
+void		redirection(t_cmd *command, int *pipe_fd);
+char		**get_current_env(t_list_env *env, int i, int lenght_list);
+int			cherch_in_env(char *path, t_list_env *env);
+void		ft_print_not_found(char *cmd_line);
+
+void		exec(t_data *data);
+
+int			here_doc(char *word, t_data *data, bool quote);
+int			check_file(t_data *data, char *cmd_line, char **path \
+				, struct stat buffer);
+
 /* parsing */
-int			check_quote(t_data *data, char *line);
-void		change_quote(char c, bool *dq, bool *sq);
-
-int			replace_dollar(char **line, t_data *data, int i);
-int			exist_in_env(char *line, t_list_env *env, int *index, char **str);
-int			len_var(char *line, char *str);
-
-int			create_list_token(t_data *data, t_token **begin, char *command, \
-								int *status);
-int			append_in_token(t_token **begin, char *line, int type);
-int			add_special(t_token **begin, char **command);
-int			is_special(char *command);
-
-int			create_list_cmd(t_data *data);
-int			ft_check_error(t_token *begin, t_data *data);
-int			add_to_cmd(t_cmd *new, t_token **begin, t_data *data);
 int			get_out(t_cmd *command, t_token *token);
 int			get_in(t_cmd *command, t_token *token, t_data *data);
 
-/* utils */
-void		print_env(t_list_env *env);
-void		print_token(t_token *token);
-void		print_cmd(t_cmd *cmd);
+int			ft_check_error(t_token *begin, t_data *data);
+int			add_to_cmd(t_cmd *new, t_token **begin, t_data *data);
 
+int			create_list_cmd(t_data *data);
+
+int			append_in_token(t_token **begin, char *line, int type);
+int			create_list_token(t_data *data, t_token **begin, char *command, \
+								int *status);
+
+int			len_var(char *line, char *str);
+int			exist_in_env(char *line, t_list_env *env, int *index, char **str);
+
+int			replace_dollar(char **line, t_data *data, int i);
+
+void		change_quote(char c, bool *dq, bool *sq);
+int			check_quote(t_data *data, char *line);
+
+/* utils */
 void		free_env(t_list_env **env);
 void		free_token(t_token **list);
 void		free_cmd(t_cmd **cmd);
-void		free_array(char **tab);
 void		free_data(t_data *data, int ext);
+void		free_array(char **tab);
 
 t_list_env	*ft_last_list_env(t_list_env *list);
 t_token		*ft_last_list_token(t_token *list);
 t_cmd		*ft_last_list_cmd(t_cmd *command);
 int			append_in_env(t_list_env **list, char *line);
 
+int			*get_addr_var_stat(void);
+
 bool		is_space(char c);
+int			is_special(char *command);
+int			add_special(t_token **begin, char **command);
 size_t		ft_strspn(const char *s, const char *accept);
 int			check_pipe(t_data *data, t_token *token);
 
-/* exec */
-void		exec(t_data *data);
-void		ft_for_child(t_data *data, t_cmd *command, int *pipe_fd);
-void		redirection(t_cmd *command, int *pipe_fd);
-char		**get_current_env(t_list_env *env, int i, int lenght_list);
-
-int			here_doc(char *word, t_data *data, bool quote);
-int			check_file(t_data *data, char *cmd_line, char **path \
-				, struct stat buffer);
-
-int			is_buildin(t_cmd *command);
-void		build(t_data *data, t_cmd *command, int *pipe_fd);
-
-/* builtins */
-int			ft_pwd(void);
-int			ft_env(t_list_env *env);
-int			ft_is_void(char *str);
-int			ft_export(char **str, t_list_env **env);
-bool		export(char *str, t_list_env **env);
-int			ft_strlen_export(char *str);
-int			ft_unset(char **arg, t_list_env **env);
-void		ft_exit(t_data *data, char **args);
-int			ft_echo(char **args);
-int			ft_cd(t_data *data, char **arg);
-int			count_arg(char **arg);
-int			ft_strlen_export(char *str);
-
-void		signals(void);
-void		handle_sigint_heredoc(int code);
-void		handle_sigint(int code);
+/* signals*/
+int			ft_signal_check(int status);
+void		ft_reset(void);
+t_state		set_signal_state(t_signal *action, int n);
+void		handle_sigint(int sig, siginfo_t *info, void *context);
 
 #endif

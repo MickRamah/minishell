@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:05:00 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/09 13:49:32 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:27:06 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,12 @@ int	len_var(char *line, char *str)
 	while (str[len_str] && str[len_str] != '=')
 		len_str++;
 	if (len_line > len_str)
-		len_str = len_line;
+		return (len_line);
 	return (len_str);
 }
 
 int	exist_in_env(char *line, t_list_env *env, int *index, char **str)
 {
-	int	i;
-
-	i = 0;
 	if (line[*index + 1] == '?')
 		return (2);
 	while (env)

@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-int	cd(t_data *data, char *path);
+static int	cd(t_data *data, char *path);
 
 static int	cd_no_arg(t_data *data)
 {
@@ -76,11 +76,10 @@ static void	ft_update_pwd(t_data *data, char *arg)
 		return ;
 	}
 	export(pwd, &data->env);
-	printf("pwd: %s\n", pwd);
 	free(pwd);
 }
 
-int	cd(t_data *data, char *path)
+static int	cd(t_data *data, char *path)
 {
 	int	fd;
 

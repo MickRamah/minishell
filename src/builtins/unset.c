@@ -6,7 +6,7 @@
 /*   By: herakoto <herakoto@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 17:54:32 by herakoto          #+#    #+#             */
-/*   Updated: 2024/11/21 17:37:54 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/20 17:34:10 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,6 @@ static int	ft_strcmp_export(char *s1, char *s2)
 		i++;
 	}
 	return (1);
-}
-
-int	ft_isequal(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 static t_list_env	*ft_exist(char *var, t_list_env *env)
@@ -98,7 +84,7 @@ int	ft_unset(char **arg, t_list_env **env)
 	while (i < count)
 	{
 		var = ft_exist(arg[i], *env);
-		if (var != NULL && ft_isequal(arg[i]) == 0)
+		if (var != NULL && ft_is_equal(arg[i]) == 0)
 			ft_delete(env, var);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 14:29:06 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/20 14:55:59 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:08:48 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ static int	check_redirection_error(t_token *token, t_data *data)
 	{
 		*(data->exit_code) = 2;
 		if (token->next->type == APPEND)
-			write(2, "minishell: syntax error near \
-			unexpected token `>>'\n", 51);
+			write(2, \
+			"minishell: syntax error near unexpected token `>>'\n", 51);
 		else if (token->next->type == HEREDOC)
-			write(2, "minishell: syntax error near \
-			unexpected token `<<'\n", 51);
+			write(2, \
+			"minishell: syntax error near unexpected token `<<'\n", 51);
 		else if (token->next->type == TRUNC)
 			write(2, "minishell: syntax error near unexpected token `>'\n", 50);
 		else if (token->next->type == INPUT)
@@ -78,7 +78,13 @@ static int	create_file(t_cmd *new, t_token **begin, t_data *data)
 	else if ((*begin)->type == INPUT || (*begin)->type == HEREDOC)
 	{
 		if (get_in(new, *begin, data) == 0)
+		{
+			if (g_signal_code == -10)
+				g_signal_code = 130;
+			if (new->infile >= 0)
+				close (new->infile);
 			return (-1);
+		}
 	}
 	if ((*begin)->next->next == NULL)
 		(*begin) = (*begin)->next->next;

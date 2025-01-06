@@ -1,47 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:20:55 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/14 14:46:09 by zramahaz         ###   ########.fr       */
+/*   Created: 2024/12/23 15:05:38 by herakoto          #+#    #+#             */
+/*   Updated: 2024/12/23 17:14:29 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ft_is_equal(char *str)
+int	ft_signal_check(int status)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			return (1);
-		i++;
-	}
-	return (0);
+	if (WTERMSIG(status) == 3)
+		printf("Quit (core dumped)\n");
+	else if (WTERMSIG(status) == 2)
+		printf("\n");
+	return (1);
 }
 
-int	count_arg(char **arg)
+void	ft_reset(void)
 {
-	int	i;
+	struct sigaction	s_sa;
+	t_signal			action;
 
-	i = 0;
-	while (arg[i])
-		i++;
-	return (i);
-}
-
-int	ft_strlen_export(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	return (i);
+	s_sa.sa_sigaction = handle_sigint;
+	s_sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&(s_sa.sa_mask));
+	action.state = GENERAL;
+	set_signal_state(&action, 0);
+	sigaction(SIGINT, &s_sa, NULL);
 }

@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
+/*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/06 11:40:41 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/03/07 10:49:02 by zramahaz         ###   ########.fr       */
+/*   Created: 2024/12/25 08:58:12 by zramahaz          #+#    #+#             */
+/*   Updated: 2024/12/25 09:09:42 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/minishell.h"
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+int	*get_addr_var_stat(void)
 {
-	new->next = *lst;
-	*lst = new;
+	static int	status = 0;
+
+	return (&status);
 }

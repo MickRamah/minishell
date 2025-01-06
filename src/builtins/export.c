@@ -67,7 +67,7 @@ static int	ft_exist(char *str, t_list_env *env)
 		if (ft_strncmp(tmp->str, str, i) == 0
 			&& (tmp->str[i] == '\0' || tmp->str[i] == '='))
 		{
-			if (ft_is_void(str) == 1)
+			if (ft_is_equal(str) == 1)
 				return (j);
 			return (-2);
 		}

@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:01:28 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/20 11:15:59 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:58:50 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,16 @@ void	create_env(t_data *data, int argc, char **argv, char **env)
 
 void	init_data(t_data *data)
 {
-	signal(SIGINT, handle_sigint);
+	struct sigaction	s_sigint;
+	t_signal			action;
+
+	s_sigint.sa_sigaction = handle_sigint;
+	s_sigint.sa_flags = SA_SIGINFO;
+	sigemptyset(&s_sigint.sa_mask);
+	action.state = GENERAL;
+	set_signal_state(&action, 0);
+	sigaction(SIGINT, &s_sigint, NULL);
+	signal(SIGQUIT, SIG_IGN);
 	data->sq = false;
 	data->dq = false;
 	data->cmd = NULL;
@@ -57,9 +66,12 @@ void	init_data(t_data *data)
 
 int	empty_line(char *line)
 {
+	int	*status;
 	int	i;
 
 	i = 0;
+	status = get_addr_var_stat();
+	*status = 0;
 	while (line[i] && is_space(line[i]))
 		i++;
 	if (i == (int)ft_strlen(line))
@@ -96,8 +108,6 @@ int	parseline(t_data *data, char *line)
 		free_cmd(&data->cmd);
 		return (0);
 	}
-	print_token(data->token);
-	print_cmd(data->cmd);
 	return (check_pipe(data, data->token));
 }
 

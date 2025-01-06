@@ -3,32 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
+/*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/19 15:13:36 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/12/19 15:13:40 by zramahaz         ###   ########.fr       */
+/*   Created: 2024/12/20 16:13:12 by herakoto          #+#    #+#             */
+/*   Updated: 2024/12/23 16:01:16 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	handle_sigint(int code)
+t_state	set_signal_state(t_signal *action, int n)
 {
-	(void)code;
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	g_signal_code = 130;
+	static t_state	state;
+
+	if (n == 0)
+		state = action->state;
+	return (state);
 }
 
-void	handle_sigint_heredoc(int code)
+void	handle_sigint(int sig, siginfo_t *info, void *context)
 {
-	(void)code;
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	close(0);
-	g_signal_code = -10;
+	int				pid;
+	int				*status;
+
+	(void)sig;
+	(void)context;
+	pid = info->si_pid;
+	status = get_addr_var_stat();
+	if (*status == 0)
+		write(STDOUT_FILENO, "\n", 2);
+	if (set_signal_state(NULL, 1) == HEREDOCS)
+	{
+		close(0);
+		g_signal_code = -10;
+		*status = 1;
+	}
+	else if (set_signal_state(NULL, 1) == GENERAL)
+	{
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		if (pid > 0)
+			rl_redisplay();
+		g_signal_code = 130;
+	}
 }

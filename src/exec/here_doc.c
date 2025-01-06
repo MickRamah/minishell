@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 16:32:32 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/09 14:06:08 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/20 18:45:35 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 static int	check_buf_and_signal(char *buf, char *word)
 {
 	int	tty;
+	int	*status;
 
+	status = get_addr_var_stat();
 	if (buf == NULL)
 	{
 		if (g_signal_code == -10)
 		{
-			g_signal_code = 130;
 			tty = open("/dev/tty", O_RDONLY);
 			if (tty == -1)
 				return (0);
@@ -32,6 +33,8 @@ static int	check_buf_and_signal(char *buf, char *word)
 			write(2, "(wanted '", 9);
 			write(2, word, ft_strlen(word));
 			write(2, "')\n", 3);
+			*status = 1;
+			g_signal_code = 0;
 		}
 		return (0);
 	}
@@ -67,15 +70,18 @@ static void	read_in_stdin(int fd, char *word, t_data *data, bool quote)
 
 int	here_doc(char *word, t_data *data, bool quote)
 {
-	int	fd;
+	int			fd;
+	t_signal	heredocs;
 
-	signal(SIGINT, handle_sigint_heredoc);
+	heredocs.state = HEREDOCS;
+	set_signal_state(&heredocs, 0);
 	fd = open(TMP_FILE, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 		return (-1);
 	read_in_stdin(fd, word, data, quote);
 	close(fd);
-	signal(SIGINT, handle_sigint);
+	heredocs.state = GENERAL;
+	set_signal_state(&heredocs, 0);
 	fd = open(TMP_FILE, O_RDONLY);
 	if (fd > 0)
 		unlink(TMP_FILE);

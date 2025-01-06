@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:53:29 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/20 16:06:07 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/23 17:13:22 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static void	ft_for_parent(t_cmd *command, int *pipe_fd)
 		command->next->infile = pipe_fd[0];
 	else
 		close(pipe_fd[0]);
+	if (command->outfile >= 0)
+		close(command->outfile);
 }
 
 static void	execute_command(t_data *data, t_cmd *command, \
@@ -72,32 +74,41 @@ static void	execute_command(t_data *data, t_cmd *command, \
 
 static void	wait_process_child(t_data *data, t_cmd *command, pid_t *pid)
 {
-	int	status;
-	int	i;
+	int			status;
+	int			i;
+	static int	signal_state = 0;
 
 	i = 0;
+	status = 0;
 	(void)data;
 	while (command)
 	{
 		waitpid(pid[i], &status, 0);
 		if (WIFEXITED(status))
 			*(data->exit_code) = WEXITSTATUS(status);
+		if (WIFSIGNALED(status) && signal_state == 0)
+			signal_state = ft_signal_check(status);
 		i++;
 		command = command->next;
 	}
+	if (WIFSIGNALED(status))
+		g_signal_code = 128 + WTERMSIG(status);
+	signal_state = 0;
 }
 
 void	exec(t_data *data)
 {
-	t_cmd		*command;
-	pid_t		*pid;
-	int			i;
+	t_cmd				*command;
+	pid_t				*pid;
+	int					i;
 
+	signal(SIGINT, SIG_IGN);
 	command = data->cmd;
 	if (command && command->argv[0] && command->next == NULL && \
 		is_buildin(command))
 	{
 		build(data, command, NULL);
+		ft_reset();
 		return ;
 	}
 	pid = len_list_cmd(data, command);
@@ -111,4 +122,5 @@ void	exec(t_data *data)
 	}
 	wait_process_child(data, data->cmd, pid);
 	free(pid);
+	ft_reset();
 }
