@@ -6,18 +6,22 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:01:28 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/12/04 17:46:21 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:58:50 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-void	create_env(t_data *data, char **env)
+int	g_signal_code;
+
+void	create_env(t_data *data, int argc, char **argv, char **env)
 {
 	t_list_env	*list;
 	int			i;
 	char		*tmp;
 
+	(void)argc;
+	(void)argv;
 	i = 0;
 	list = NULL;
 	while (env[i])
@@ -41,19 +45,33 @@ void	create_env(t_data *data, char **env)
 
 void	init_data(t_data *data)
 {
+	struct sigaction	s_sigint;
+	t_signal			action;
+
+	s_sigint.sa_sigaction = handle_sigint;
+	s_sigint.sa_flags = SA_SIGINFO;
+	sigemptyset(&s_sigint.sa_mask);
+	action.state = GENERAL;
+	set_signal_state(&action, 0);
+	sigaction(SIGINT, &s_sigint, NULL);
+	signal(SIGQUIT, SIG_IGN);
 	data->sq = false;
 	data->dq = false;
 	data->cmd = NULL;
 	data->token = NULL;
 	data->env = NULL;
-	data->exit_code = 0;
+	g_signal_code = 0;
+	data->exit_code = &g_signal_code;
 }
 
 int	empty_line(char *line)
 {
+	int	*status;
 	int	i;
 
 	i = 0;
+	status = get_addr_var_stat();
+	*status = 0;
 	while (line[i] && is_space(line[i]))
 		i++;
 	if (i == (int)ft_strlen(line))
@@ -68,28 +86,29 @@ int	parseline(t_data *data, char *line)
 {
 	int	status;
 
+	status = 0;
 	if (!check_quote(data, line))
 	{
 		free(line);
 		return (0);
 	}
-	if (!replace_dollar(&line, data) || !create_list_token(&data->token, line))
+	if (!replace_dollar(&line, data, status) \
+		|| !create_list_token(data, &data->token, line, &status))
 	{
 		free(line);
-		printf("malloc ERROR\n");
+		if (status == -1)
+			return (0);
+		write(2, "malloc ERROR\n", 13);
 		free_data(data, 1);
 	}
 	free(line);
-	print_token(data->token);
 	if (!create_list_cmd(data))
 	{
 		free_token(&data->token);
 		free_cmd(&data->cmd);
 		return (0);
 	}
-	print_cmd(data->cmd);
-	status = check_pipe(data, data->token);
-	return (status);
+	return (check_pipe(data, data->token));
 }
 
 int	main(int argc, char **argv, char **env)
@@ -97,22 +116,24 @@ int	main(int argc, char **argv, char **env)
 	t_data	data;
 	char	*line;
 
-	(void)argc;
-	(void)argv;
-	ft_signal_handler();
 	init_data(&data);
-	create_env(&data, env);
+	create_env(&data, argc, argv, env);
 	while (1)
 	{
 		line = readline("minishell> ");
 		if (line == NULL)
-			ft_end_of_file(&data);
+		{
+			printf("exit\n");
+			free_data(&data, *(data.exit_code));
+		}
 		if (empty_line(line))
 			continue ;
 		add_history(line);
 		if (!parseline(&data, line))
 			continue ;
 		exec(&data);
+		free_token(&data.token);
+		free_cmd(&data.cmd);
 	}
 	rl_clear_history();
 	free_data(&data, -42);

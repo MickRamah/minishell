@@ -19,7 +19,8 @@ int	ft_env(t_list_env *env)
 	tmp = env;
 	while (tmp != NULL)
 	{
-		printf("%s\n", tmp->str);
+		if (ft_is_equal(tmp->str) == 1)
+			printf("%s\n", tmp->str);
 		tmp = tmp->next;
 	}
 	return (0);

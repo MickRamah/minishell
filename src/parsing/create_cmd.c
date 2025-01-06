@@ -74,8 +74,7 @@ static int	append_cmd(t_cmd **command, t_token **begin, int nb, t_data *data)
 		free_cmd(&new);
 		if (status == -1)
 			return (-1);
-		else
-			return (0);
+		return (0);
 	}
 	if (*command == NULL)
 	{
@@ -105,10 +104,7 @@ int	create_list_cmd(t_data *data)
 			return (0);
 		status = append_cmd(&data->cmd, &begin, nb, data);
 		if (status == -1)
-		{
-			data->exit_code = 2;
 			return (0);
-		}
 		if (status == 0)
 			free_data(data, 1);
 		if (begin && begin->type == PIPE)

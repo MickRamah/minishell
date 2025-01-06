@@ -1,40 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_handler.c                                   :+:      :+:    :+:   */
+/*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 11:44:06 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/06 16:06:43 by herakoto         ###   ########.fr       */
+/*   Created: 2024/12/23 15:05:38 by herakoto          #+#    #+#             */
+/*   Updated: 2024/12/23 17:14:29 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	ft_sigint_function(int sig, siginfo_t *siginfo, void *context)
+int	ft_signal_check(int status)
 {
-	int	pid;
-
-	(void)context;
-	pid = siginfo->si_pid;
-	write(1, "\n", 2);
-	if (sig == SIGINT && pid > 0)
-	{
-		write(1, "parent\n", 8);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	if (WTERMSIG(status) == 3)
+		printf("Quit (core dumped)\n");
+	else if (WTERMSIG(status) == 2)
+		printf("\n");
+	return (1);
 }
 
-void	ft_signal_handler(void)
+void	ft_reset(void)
 {
 	struct sigaction	s_sa;
+	t_signal			action;
 
-	s_sa.sa_sigaction = ft_sigint_function;
+	s_sa.sa_sigaction = handle_sigint;
 	s_sa.sa_flags = SA_SIGINFO;
-	sigemptyset(&s_sa.sa_mask);
+	sigemptyset(&(s_sa.sa_mask));
+	action.state = GENERAL;
+	set_signal_state(&action, 0);
 	sigaction(SIGINT, &s_sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
 }

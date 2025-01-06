@@ -22,13 +22,11 @@ int	append_in_token(t_token **begin, char *line, int type)
 		return (0);
 	new->next = NULL;
 	new->type = type;
+	new->quote = false;
 	new->str = ft_strdup(line);
 	free(line);
 	if (new->str == NULL)
-	{
-		free(new);
 		return (0);
-	}
 	if (*begin == NULL)
 	{
 		*begin = new;
@@ -93,9 +91,6 @@ static void	len_cmd(char *command, int *quote, int *lenght)
 		}
 		if (command[*lenght])
 			(*lenght)++;
-		if (command[*lenght] && command[*lenght] != ' ' \
-			&& command[*lenght] != '"' && command[*lenght] != '\'')
-			(*lenght)++;
 	}
 }
 
@@ -127,8 +122,13 @@ static int	add_cmd(t_token **begin, char **command)
 	return (1);
 }
 
-int	create_list_token(t_token **begin, char *line)
+int	create_list_token(t_data *data, t_token **begin, char *line, int *status)
 {
+	if (!check_quote(data, line))
+	{
+		*status = -1;
+		return (0);
+	}
 	while (*line)
 	{
 		line += ft_strspn(line, " ");

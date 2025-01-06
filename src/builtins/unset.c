@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: herakoto <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: herakoto <herakoto@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/27 13:08:43 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/04 17:39:58 by herakoto         ###   ########.fr       */
+/*   Created: 2024/10/08 17:54:32 by herakoto          #+#    #+#             */
+/*   Updated: 2024/12/20 17:34:10 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,6 @@ static int	ft_strcmp_export(char *s1, char *s2)
 		i++;
 	}
 	return (1);
-}
-
-int	ft_isequal(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 static t_list_env	*ft_exist(char *var, t_list_env *env)
@@ -79,6 +65,7 @@ static void	ft_delete(t_list_env **env, t_list_env *searched)
 		((tmp)->prev)->next = (tmp)->next;
 		((tmp)->next)->prev = (tmp)->prev;
 	}
+	free(tmp->str);
 	free(tmp);
 	tmp = NULL;
 }
@@ -97,9 +84,9 @@ int	ft_unset(char **arg, t_list_env **env)
 	while (i < count)
 	{
 		var = ft_exist(arg[i], *env);
-		if (var != NULL && ft_isequal(arg[i]) == 0)
+		if (var != NULL && ft_is_equal(arg[i]) == 0)
 			ft_delete(env, var);
 		i++;
 	}
-	return (1);
+	return (0);
 }

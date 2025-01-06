@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/04 17:03:15 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/04 17:39:22 by herakoto         ###   ########.fr       */
+/*   Created: 2024/10/21 17:14:07 by herakoto          #+#    #+#             */
+/*   Updated: 2024/11/21 17:36:47 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,11 @@ static int	ft_exist(char *str, t_list_env *env)
 	{
 		if (ft_strncmp(tmp->str, str, i) == 0
 			&& (tmp->str[i] == '\0' || tmp->str[i] == '='))
-			return (j);
+		{
+			if (ft_is_equal(str) == 1)
+				return (j);
+			return (-2);
+		}
 		tmp = tmp->next;
 		j++;
 	}
@@ -81,6 +85,8 @@ bool	export(char *str, t_list_env **env)
 	t_list_env	*tmp;
 
 	pos = ft_exist(str, (*env));
+	if (pos == -2)
+		return (true);
 	value = ft_strdup(str);
 	if (!value)
 		return (false);
@@ -94,10 +100,8 @@ bool	export(char *str, t_list_env **env)
 		tmp->str = value;
 	}
 	else if (pos == -1)
-	{
 		if (!append_in_env(env, value))
 			return (false);
-	}
 	return (true);
 }
 
@@ -108,6 +112,7 @@ int	ft_export(char **str, t_list_env **env)
 	int	count;
 
 	i = 1;
+	exit_code = 0;
 	count = count_arg(str);
 	if (count == 1)
 		return (ft_export_no_args(*env));

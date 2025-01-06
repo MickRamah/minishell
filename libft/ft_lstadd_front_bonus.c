@@ -17,9 +17,3 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 	new->next = *lst;
 	*lst = new;
 }
-
-/*
-l'adresse de <new->next> va etre l'adresse du 1er element;
-et le 1er element va etre new car <*lst> = <new> ce qui veux 
-dire que l'adresse de <new> sera affecte a l'adresse de <lst>
-*/

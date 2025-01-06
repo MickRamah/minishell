@@ -6,7 +6,7 @@
 /*   By: zramahaz <zramahaz@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 16:43:04 by zramahaz          #+#    #+#             */
-/*   Updated: 2024/11/09 13:23:49 by zramahaz         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:27:47 by herakoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	free_cmd(t_cmd **cmd)
 {
 	t_cmd	*tmp;
 	t_cmd	*current;
-	int		i;
 
 	current = *cmd;
 	if (current == NULL)
@@ -60,7 +59,6 @@ void	free_cmd(t_cmd **cmd)
 	while (current)
 	{
 		tmp = current->next;
-		i = 0;
 		free_array(current->argv);
 		if (current->infile >= 0)
 			close(current->infile);

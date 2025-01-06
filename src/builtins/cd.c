@@ -6,13 +6,13 @@
 /*   By: herakoto <herakoto@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 15:37:12 by herakoto          #+#    #+#             */
-/*   Updated: 2024/12/05 17:09:06 by herakoto         ###   ########.fr       */
+/*   Updated: 2024/11/21 17:35:10 by zramahaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	cd(t_data *data, char *path);
+static int	cd(t_data *data, char *path);
 
 static int	cd_no_arg(t_data *data)
 {
@@ -48,7 +48,7 @@ static void	ft_update_oldpwd(t_data *data)
 		tmp = tmp->next;
 	}
 	if (tmp == NULL)
-		export("OLDPWD", &data->env);
+		return ;
 	oldpwd = ft_strjoin("OLD", tmp->str);
 	if (!oldpwd)
 	{
@@ -61,7 +61,7 @@ static void	ft_update_oldpwd(t_data *data)
 
 static void	ft_update_pwd(t_data *data, char *arg)
 {
-	char	cwd[PATH_MAX];
+	char	cwd[4096];
 	char	*pwd;
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
@@ -76,14 +76,13 @@ static void	ft_update_pwd(t_data *data, char *arg)
 		return ;
 	}
 	export(pwd, &data->env);
-	printf("pwd: %s\n", pwd);
 	free(pwd);
 }
 
-int	cd(t_data *data, char *path)
+static int	cd(t_data *data, char *path)
 {
 	int	fd;
-	
+
 	fd = chdir(path);
 	if (fd == 0)
 	{
